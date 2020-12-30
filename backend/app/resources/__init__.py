@@ -1,6 +1,6 @@
 from flask_restful import Api
 #from webargs.flaskparser import parser, abort
-from .hello import HelloWorldResource
+from app.resources.hello import HelloWorldResource
 
 ##@parser.error_handler
 ##def handle_request_parsing_error(err, *_unused):

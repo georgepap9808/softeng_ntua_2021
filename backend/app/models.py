@@ -5,6 +5,7 @@ from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
 migrate = Migrate()
+ma = Marshmallow()
 
 class User(db.Model):
     __tablename__ = 'user'
