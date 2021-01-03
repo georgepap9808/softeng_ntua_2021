@@ -31,7 +31,7 @@ class User(db.Model):
     zip_code =  db.Column(db.String(5), nullable=False )
 
     #Relationships
-    vechicles = db.relationship('vechicle',backref='owner',lazy = 'dynamic')
+    vehicles = db.relationship('vehicle',backref='owner',lazy = 'dynamic')
     cards = db.relationship('card',backref='owner',lazy = 'dynamic')
 
     @property
@@ -46,8 +46,8 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-class Vechicle(db.Model):
-    __tablename__ = 'vechicle'
+class Vehicle(db.Model):
+    __tablename__ = 'vehicle'
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     registration_plate = db.Column(db.String(10),primary_key = True , nullable = False, autoincrement = False)
