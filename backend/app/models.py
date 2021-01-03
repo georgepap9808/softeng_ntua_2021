@@ -50,7 +50,7 @@ class Vehicle(db.Model):
     __tablename__ = 'vehicle'
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    registration_plate = db.Column(db.String(10),primary_key = True , nullable = False, autoincrement = False)
+    registration_plate = db.Column(db.String(10),primary_key = True , nullable = False,unique = True, autoincrement = False)
     manufacturer = db.Column(db.String(64),nullable = False)
     model = db.Column(db.String(64),nullable = False)
 
