@@ -31,8 +31,8 @@ class User(db.Model):
     zip_code =  db.Column(db.String(5), nullable=False )
 
     #Relationships
-    vehicles = db.relationship('vehicle',backref='owner',lazy = 'dynamic')
-    cards = db.relationship('card',backref='owner',lazy = 'dynamic')
+    vehicles = db.relationship('Vehicle',backref='owner',lazy = 'dynamic')
+    cards = db.relationship('Card',backref='owner',lazy = 'dynamic')
 
     @property
     def password(self):

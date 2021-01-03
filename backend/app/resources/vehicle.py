@@ -22,10 +22,10 @@ class RegisterVehicleResource(Resource):
             user_id = args['user_id'],
             registration_plate = args['registration_plate'],
             manufacturer = args['manufacturer'],
-            mode =  args['model']
+            model =  args['model']
         )
 
-        db.session.add(vechicle)
+        db.session.add(vehicle)
         try:
             db.session.commit()
         except IntegrityError as e:
