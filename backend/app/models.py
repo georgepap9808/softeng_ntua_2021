@@ -30,6 +30,10 @@ class User(db.Model):
     number = db.Column(db.Integer, nullable=False )
     zip_code =  db.Column(db.String(5), nullable=False )
 
+    #Relationships
+    vechicles = db.relationship('vechicle',backref='owner',lazy = 'dynamic')
+    cards = db.relationship('card',backref='owner',lazy = 'dynamic')
+
     @property
     def password(self):
         raise AttributeError('Password not readable')
@@ -40,3 +44,48 @@ class User(db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class Vechicle(db.Model):
+    __tablename__ = 'vechicle'
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    registration_plate = db.Column(db.String(10),primary_key = True , nullable = False, autoincrement = False)
+    manufacturer = db.Column(db.String(64),nullable = False)
+    model = db.Column(db.String(64),nullable = False)
+
+
+class Card(db.Model): 
+    __tablename__ = 'card'
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    card_number = db.Column(db.String(16),primary_key = True)
+    card_expiration = db.Column(db.String(4),nullable = False)
+    cvc_code = db.Column(db.Integer,nullable = False)
+
+class Station(db.Model):
+    __tablename__ = 'station'
+
+    id = db.Column(db.Integer,primary_key = True,autoincrement = True)
+    country = db.Column(db.String(64), nullable = False)
+    city = db.Column(db.String(64), nullable = False)
+    street = db.Column(db.String(64), nullable = False)
+    number = db.Column(db.Integer, nullable = False)
+
+    avg_rating = db.Column(db.Float, nullable = True)
+    num_ratings = db.Column(db.Integer, nullable = False, default = 0)
+    
+    #add session relationship !!!!!!!
+
+
+class Provider(db.Model):
+    __tablename__ = 'provider'
+
+    id = db.Column(db.Integer,primary_key = True,autoincrement = True)
+    name = db.Column(db.String(64), nullable = False)
+    kwh_cost = db.Column(db.Float, nullable = False)
+
+
+
+
+
