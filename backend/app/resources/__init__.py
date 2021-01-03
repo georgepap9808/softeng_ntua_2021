@@ -3,6 +3,7 @@ from flask_restful import Api
 from app.resources.hello import HelloWorldResource
 from app.resources.auth import LoginResource,RegisterResource
 from app.resources.vehicle import VehicleResource
+from app.resources.station import StationResource,SubmitRatingResource
 
 
 ##@parser.error_handler
@@ -17,4 +18,5 @@ api.add_resource(LoginResource,'/login')
 api.add_resource(RegisterResource,'/register')
 
 api.add_resource(VehicleResource,'/vehicle')
-
+api.add_resource(StationResource,'/station')
+api.add_resource(SubmitRatingResource,'/station/rating')

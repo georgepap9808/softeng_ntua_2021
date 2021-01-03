@@ -71,7 +71,13 @@ class VehicleResource(Resource):
     def delete(self,args):
         veh = Vehicle.query.get_or_404(args['registration_plate'])
         db.session.delete(veh)
-        db.session.commit()
-        return {"message":"OK"}
+        
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            return custom_error('some sql error',[str(e._message)])
+
+        return {'message': 'OK'}
 
         
