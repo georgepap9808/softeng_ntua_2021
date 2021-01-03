@@ -68,7 +68,7 @@ class ProviderResource(Resource):
 
         return {
             'message': 'OK',
-            'new rating': args['kwh_cost'] 
+            'new kwh': args['kwh_cost'] 
             }    
 
 
