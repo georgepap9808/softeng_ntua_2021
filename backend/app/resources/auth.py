@@ -1,7 +1,8 @@
 from flask import request
 from webargs.flaskparser import use_args
 from webargs import fields, validate
-
+from functools import wraps
+from secrets import token_urlsafe   
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from app.models import User, db
@@ -9,7 +10,22 @@ from app.resources.utils import custom_error, ErrorCode
 
 
 def requires_auth(f):
-    pass
+    '''
+    decorator to use for resources that need authorization
+    adds 2 kwargs : is_admin, token
+    '''
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('X-OBSERVATORY-AUTH')
+        if not token:
+            return custom_error('token', ['No authorization token provided']), ErrorCode.FORBIDDEN
+        user = User.query.filter(User.token == token).first()
+        if not user:
+            return custom_error('token', ['Invalid token']), ErrorCode.FORBIDDEN
+        kwargs['is_admin'] = user.is_admin
+        kwargs['token'] = user.token
+        return f(*args, **kwargs)
+    return decorated
 
 
 def _login(user):
@@ -19,13 +35,22 @@ def _login(user):
         (user.token should be None).
     '''
     while True:
-        #user.token = token_urlsafe(20)
+        user.token = token_urlsafe(20)
         try:
             db.session.commit()
             break
         except IntegrityError:
             db.session.rollback()
             # token collision
+
+
+class LogoutResource(Resource):
+    @requires_auth
+    def post(self, token, **_kwargs):
+        User.query.filter(User.token == token).update({'token': None})
+        db.session.commit()
+        return {'message': 'OK'}
+
 
 class LoginResource(Resource):
     @use_args({
@@ -42,7 +67,7 @@ class LoginResource(Resource):
                 
         _login(user)
 
-        return {'id': user.id}
+        return {'token': user.token}
 
 
 class RegisterResource(Resource):
