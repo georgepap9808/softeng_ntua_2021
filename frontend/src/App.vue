@@ -1,29 +1,37 @@
 <template>
   <div class="vue-tempalte">
-    <!-- Navigation -->
-    <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row fixed-top">
-      <div class="container">
-        <a class ="navbar-brand float-left">
-          <router-link class = "nav-link home" to="/"> EV Charging System </router-link>
-        </a>
-        <ul class="nav navbar-nav flex-row float-right">
-          <li class="nav-item">
-            <router-link class="nav-link pr-3" to="/login">Sign in</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="btn btn-outline-primary" to="/">Sign up</router-link>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
     <!-- Main -->
     <div class="App">
-      <div class="vertical-center">
-        <div class="inner-block">
-          <router-view />
-        </div>
-      </div>
+          <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>
+          <router-view @authenticated="setAuthenticated" />
     </div>
   </div>
 </template>
+
+<script>
+    export default {
+        name: 'App',
+        data() {
+            return {
+                authenticated: false,
+                mockAccount: {
+                    email: "nef@mail.com",
+                    password: "password"
+                }
+            }
+        },
+        mounted() {
+            if(!this.authenticated) {
+                //this.$router.replace({ name: "login" });
+            }
+        },
+        methods: {
+            setAuthenticated(status) {
+                this.authenticated = status;
+            },
+            logout() {
+                this.authenticated = false;
+            }
+        }
+    }
+</script>

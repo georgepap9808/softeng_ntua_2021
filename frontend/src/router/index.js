@@ -15,9 +15,9 @@ Vue.use(VueRouter)
     component: () => import('../components/Login.vue')
   },
   {
-    path: '/forgot-password',
-    name: 'forgot-password',
-    component: () => import('../components/ForgotPassword.vue')
+    path: '/home',
+    name: 'home',
+    component: () => import('../components/Home.vue')
   }
 ]
 
