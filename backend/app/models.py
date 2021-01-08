@@ -88,6 +88,16 @@ class Provider(db.Model):
     kwh_cost = db.Column(db.Float, nullable = False)
 
 
+class Session(db.Model):
+    __tablename__ = 'session'
 
+    id = db.Column(db.Integer,primary_key = True, autoincrement = True)
+    user_id = db.Column(db.Integer,db.ForeignKey("user.id"))
+    station_id = db.Column(db.Integer,db.ForeignKey("station.id") )
+    registration_plate = db.Column(db.String(10),db.ForeignKey("vehicle.registration_plate"))
+    starting_time = db.Column(db.Time, nullable = False)
+    finishing_time = db.Column(db.Time, nullable = False)
+    kwh_cost = db.Column(db.Float, nullable = False)
+    provider_id = db.Column(db.Integer,db.ForeignKey("provider.id"))
 
 
