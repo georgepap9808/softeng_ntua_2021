@@ -1,7 +1,7 @@
 from flask_restful import Api
 from webargs.flaskparser import parser, abort
 from app.resources.hello import HelloWorldResource
-from app.resources.auth import LoginResource,RegisterResource,LogoutResource
+from app.resources.auth import LoginResource,RegisterResource,LogoutResource,GetUserDataResource
 from app.resources.vehicle import VehicleResource
 from app.resources.station import StationResource,SubmitRatingResource
 from app.resources.provider import ProviderResource
@@ -18,6 +18,7 @@ api.add_resource(HelloWorldResource, '/hello/<test>')
 api.add_resource(LoginResource,'/login')
 api.add_resource(LogoutResource,'/logout')
 api.add_resource(RegisterResource,'/admin/usermod/<username>/<password>')
+api.add_resource(GetUserDataResource,'/admin/users/<username>')
 
 api.add_resource(VehicleResource,'/vehicle')
 api.add_resource(StationResource,'/station')

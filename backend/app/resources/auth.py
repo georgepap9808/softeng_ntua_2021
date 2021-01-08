@@ -70,6 +70,30 @@ class LoginResource(Resource):
         return {'token': user.token}
 
 
+class GetUserDataResource(Resource):
+    @requires_auth
+    def get(self,token,is_admin,username):
+        if not is_admin:
+            abort(401)
+        else:
+            try:
+                u = User.query.filter(User.username == username).first()
+
+                return {
+                    "username":u.username,
+                    "first_name":u.first_name,
+                    "last_name":u.last_name,
+                    "country":u.country, 
+                    "city":u.city, 
+                    "street":u.street,
+                    "number": u.number, 
+                    "zip_code":u.zip_code
+                }
+            except Exception as e: 
+                return {"error":str(e)}
+
+
+
 class RegisterResource(Resource):
     @requires_auth
     @use_args({
