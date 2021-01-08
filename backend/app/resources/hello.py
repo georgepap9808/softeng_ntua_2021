@@ -13,7 +13,7 @@ class HelloWorldResource(Resource):
     @use_args({
         'username': fields.Str(required=True),
         'password': fields.Str(required=True)
-    })
+    },location= 'query')
     def get(self , args , token,is_admin,test):    
         """            
         u = User(username = 'nikos',is_admin = True, password= 'yay123',token = None, first_name = 'nikolaos', last_name = 'markakis',country = 'gr', city = 'athens', street = 'malakismenou', number = 2, zip_code = '12311')
@@ -24,9 +24,10 @@ class HelloWorldResource(Resource):
             db.session.rollback()
             return {'some sql error':str(e._message)}
             #return custom_error('email', ['email already in use']), ErrorCode.BAD_REQUEST
-            """
+            
         try:
             db.session.execute("select 1;")
         except Exception as e: 
             return {"error": str(e)}
-        return {'message': "OK"}
+        """
+        return {'message': test}

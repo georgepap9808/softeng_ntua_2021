@@ -17,7 +17,7 @@ api.add_resource(HelloWorldResource, '/hello/<test>')
 
 api.add_resource(LoginResource,'/login')
 api.add_resource(LogoutResource,'/logout')
-api.add_resource(RegisterResource,'/admin/usermod/<username>/<password>/')
+api.add_resource(RegisterResource,'/admin/usermod/<username>/<password>')
 
 api.add_resource(VehicleResource,'/vehicle')
 api.add_resource(StationResource,'/station')

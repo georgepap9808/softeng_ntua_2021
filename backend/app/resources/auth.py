@@ -83,11 +83,11 @@ class RegisterResource(Resource):
         'street': fields.Str(required=True),
         'number': fields.Int(required=True),
         'zip_code': fields.Str(required=True)#,
-        #'format': fields.Str(missing='json', location='query', validate=validate.Equal('json'))
-    })
-    def post(self, args):
-        if not kwargs['is_admin']:
-            return ErrorCode.UNAUTHORIZED
+      #'format': fields.Str(missing='json', location='query', validate=validate.Equal('json'))
+    },location='query')
+    def post(self,args, token, is_admin,username,password):
+        if not is_admin:
+            abort(401)
         
         user = User(
           #  email=args['email'], 
