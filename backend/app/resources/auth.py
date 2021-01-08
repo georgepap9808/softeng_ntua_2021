@@ -1,5 +1,5 @@
 from flask import request
-from webargs.flaskparser import use_args
+from webargs.flaskparser import use_args,use_kwargs
 from webargs import fields, validate
 from functools import wraps
 from secrets import token_urlsafe   
@@ -41,7 +41,7 @@ def _login(user):
             break
         except IntegrityError:
             db.session.rollback()
-            # token collision
+            # token collision gamw ton xristo sou aaaaa
 
 
 class LogoutResource(Resource):
@@ -54,12 +54,12 @@ class LogoutResource(Resource):
 
 class LoginResource(Resource):
     @use_args({
-        'email': fields.Str(required=True),
+        'username': fields.Str(required=True),
         'password': fields.Str(required=True)#,
-#        'format': fields.Str(missing='json', location='query', validate=validate.Equal('json'))
-    })
+        #'format': fields.Str(missing='json', location='query', validate=validate.Equal('json'))
+    },location = "query")
     def post(self, args):
-        user = User.query.filter(User.email == args['email']).first()
+        user = User.query.filter(User.username == args['username']).first()
         if not user:
             return custom_error('username', ['Invalid username']), ErrorCode.BAD_REQUEST
         elif not user.verify_password(args['password']):
@@ -71,24 +71,30 @@ class LoginResource(Resource):
 
 
 class RegisterResource(Resource):
+    @requires_auth
     @use_args({
-        'email': fields.Str(required=True),
+        #'email': fields.Str(required=True),
         'is_admin': fields.Bool(required=True),
-        'password': fields.Str(required=True, validate=validate.Length(min=1)),
+        #'password': fields.Str(required=True, validate=validate.Length(min=1)),
         'first_name': fields.Str(required=True),
         'last_name': fields.Str(required=True),
         'country': fields.Str(required=True),
         'city': fields.Str(required=True),
         'street': fields.Str(required=True),
         'number': fields.Int(required=True),
-        'zip_code': fields.Str(required=True)
- #       'format': fields.Str(missing='json', location='query', validate=validate.Equal('json'))
+        'zip_code': fields.Str(required=True)#,
+        #'format': fields.Str(missing='json', location='query', validate=validate.Equal('json'))
     })
     def post(self, args):
+        if not kwargs['is_admin']:
+            return ErrorCode.UNAUTHORIZED
+        
         user = User(
-            email=args['email'], 
+          #  email=args['email'], 
+            username = username ,
             is_admin = args['is_admin'],
-            password=args['password'],
+          #  password=args['password'],
+            password = password,
             first_name = args['first_name'],
             last_name = args['last_name'],
             country = args['country'],
