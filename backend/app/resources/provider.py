@@ -29,8 +29,8 @@ class ProviderResource(Resource):
     @use_args({
         'name':fields.Str(required=True),
         'kwh_cost':fields.Float(required=True)
-    })
-    def post(self,args):
+    },location='query')
+    def post(self,args,token,is_admin):
         provider = Provider(
             name = args['name'],
             kwh_cost = args['kwh_cost']
@@ -46,10 +46,11 @@ class ProviderResource(Resource):
         return {'message': 'OK'}
 
 
+    @requires_auth #??
     @use_args({    
         'id':fields.Int(required=True)
-    })
-    def get(self, args):
+    },location='query')
+    def get(self, args,token,is_admin):
         prov = Provider.query.filter(Provider.id == args['id']).first()
         return provider_schema.dump(prov)          
 
@@ -57,8 +58,8 @@ class ProviderResource(Resource):
     @use_args({
         'id':fields.Int(required=True),
         'kwh_cost':fields.Float(required=True)
-    })
-    def put(self,args):
+    },location='query')
+    def put(self,args,token,is_admin):
         prov = Provider.query.filter(Provider.id== args['id']).first()
         prov.kwh_cost = args['kwh_cost']
 
@@ -76,8 +77,8 @@ class ProviderResource(Resource):
     @requires_admin
     @use_args({    
         'id':fields.Int(required=True)
-    })
-    def delete(self,args):
+    },location='query')
+    def delete(self,args,token,is_admin):
         prov = Provider.query.get_or_404(args['id'])
         db.session.delete(prov)
         

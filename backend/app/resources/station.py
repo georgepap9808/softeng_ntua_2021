@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from app.models import Station, db,ma
 from app.resources.utils import custom_error, ErrorCode
 
-from app.resources.auth import requires_auth
+from app.resources.auth import requires_auth,requires_admin
 
 import json
 
@@ -31,8 +31,8 @@ class StationResource(Resource):
         'city':fields.Str(required=True),
         'street':fields.Str(required=True),
         'number':fields.Int(required=True)
-    })
-    def post(self,args):
+    },location='query')
+    def post(self,args,token,is_admin):
         station = Station(
             country = args['country'],
             city = args['city'],
@@ -49,19 +49,19 @@ class StationResource(Resource):
 
         return {'message': 'OK'}
 
-
+    @requires_auth
     @use_args({    
         'id':fields.Int(required=True)
-    })
-    def get(self, args):
+    },location='query')
+    def get(self, args,token,is_admin):
         stat = Station.query.filter(Station.id == args['id']).first()
         return station_schema.dump(stat)
 
     @requires_admin
     @use_args({    
         'id':fields.Int(required=True)
-    })
-    def delete(self,args):
+    },location='query')
+    def delete(self,args,token,is_admin):
         stat = Station.query.get_or_404(args['id'])
         db.session.delete(stat)
         
@@ -78,8 +78,8 @@ class SubmitRatingResource(Resource):
     @use_args({
         "id":fields.Int(required=True),
         "rating":fields.Int(required=True)
-    })
-    def post(self,args):
+    },location='query')
+    def post(self,args,token,is_admin):
         stat = Station.query.filter(Station.id == args['id']).first()
         n = stat.num_ratings 
         avg = 0 if stat.avg_rating == None else stat.avg_rating
