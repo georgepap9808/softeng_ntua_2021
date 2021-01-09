@@ -4,38 +4,24 @@
     <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row fixed-top">
       <div class="container">
         <a class ="navbar-brand float-left">
-          <router-link class = "nav-link home" to="/"> EV Charging System </router-link>
+          <router-link class = "nav-link home" to="/login"> EV Charging System </router-link>
         </a>
-        <ul class="nav navbar-nav flex-row float-right">
-          <li class="nav-item">
-            <router-link class="nav-link pr-3" to="/login">Sign in</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="btn btn-outline-primary" to="/">Sign up</router-link>
-          </li>
-        </ul>
       </div>
     </nav>
 
     <!-- Login Form -->
     <div class="vertical-center">
       <div class="inner-block">
-        <form>
+        <form class = "login" @submit.prevent = "login">
             <h3>Sign In</h3>
             <div class="form-group">
-                <label>Email address</label>
-                <input type="email"
-                name = "email"
-                v-model = "input.email"
-                class="form-control form-control-lg" />
+                <label> Username </label>
+                <input required v-model = "username" type="text" class="form-control form-control-lg" />
             </div>
 
             <div class="form-group">
                 <label>Password</label>
-                <input type="password"
-                name = "password"
-                v-model = "input.password"
-                class="form-control form-control-lg" />
+                <input required v-model = "password" type="password" class="form-control form-control-lg" />
             </div>
 
             <button type="button"
@@ -52,29 +38,19 @@
         name: 'Login',
         data() {
             return {
-                input: {
-                    email: null,
-                    password: null
-                },
-              err: {
-                error: null,
-                msg: ""
-              }
+              username: "",
+              password: ""
             }
         },
         methods: {
             login() {
-                if(this.input.email != null && this.input.password != null) {
-                    if(this.input.email == this.$parent.mockAccount.email &&
-                    this.input.password == this.$parent.mockAccount.password) {
-                        this.$emit("authenticated", true);
-                        this.$router.replace({ name: 'home' });
-                    } else {
-                        console.log("The email and / or password is incorrect");
-                    }
-                } else {
-                    console.log("An email and password must be present");
-                }
+              let username = this.username
+              let password = this.password
+              this.$store.dispatch('login', { username, password })
+              .then(() => {
+                this.$router.push('/')
+              })
+              .catch(err => console.log(err))
             }
         }
     }
