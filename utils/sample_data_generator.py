@@ -37,6 +37,11 @@ def create_admin_nikos(db_file):
     
 #create_admin_nikos("../backend/app.db")
 
+
+def create_some_users(db_file):
+    conn = create_connection(db_file)
+
+    
         
     
     
