@@ -4,12 +4,12 @@ from app.models import User,db
 from webargs.flaskparser import use_args
 #from app.models import  db#, ma
 from sqlalchemy.exc import IntegrityError
-from app.resources.auth import requires_auth
+from app.resources.auth import requires_auth,requires_admin
 #from sqlalchemy import func
 
 
 class HelloWorldResource(Resource):
-    @requires_auth
+    @requires_admin
     @use_args({
         'username': fields.Str(required=True),
         'password': fields.Str(required=True)

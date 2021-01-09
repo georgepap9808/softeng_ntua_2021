@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from app.models import Provider, db,ma
 from app.resources.utils import custom_error, ErrorCode
 
-from app.resources.auth import requires_auth
+from app.resources.auth import requires_auth,requires_admin
 
 import json
 
@@ -25,6 +25,7 @@ class ProviderSchema(ma.SQLAlchemyAutoSchema):
 provider_schema = ProviderSchema()
 
 class ProviderResource(Resource):
+    @requires_admin
     @use_args({
         'name':fields.Str(required=True),
         'kwh_cost':fields.Float(required=True)
@@ -52,6 +53,7 @@ class ProviderResource(Resource):
         prov = Provider.query.filter(Provider.id == args['id']).first()
         return provider_schema.dump(prov)          
 
+    @requires_admin
     @use_args({
         'id':fields.Int(required=True),
         'kwh_cost':fields.Float(required=True)
@@ -71,7 +73,7 @@ class ProviderResource(Resource):
             'new kwh': args['kwh_cost'] 
             }    
 
-
+    @requires_admin
     @use_args({    
         'id':fields.Int(required=True)
     })

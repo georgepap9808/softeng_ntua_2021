@@ -11,31 +11,27 @@ from sqlalchemy.exc import IntegrityError
 from app.models import db,ma
 from app.resources.utils import custom_error, ErrorCode
 
-from app.resources.auth import requires_auth
+from app.resources.auth import requires_auth,requires_admin
 
 import json
 
 
 class HealthCheckResource(Resource):
-    @requires_auth
-    def get(self,token,is_admin):
-        if is_admin: 
-            try:
-                db.session.execute("select 1;")
-            except Exception as e: 
-                return {"error": str(e)}
-            return {'status': "OK"}
-        else:
-            abort(401)
+    @requires_admin
+    def get(self,token,is_admin):         
+        try:
+            db.session.execute("select 1;")
+        except Exception as e: 
+            return {"error": str(e)}
+        return {'status': "OK"}
+        
 
 class ResetSessionResource(Resource):
-    @requires_auth
-    def post(self,token,is_admin):
-        if is_admin: 
-            try:
-                db.session.execute("delete * from session;")
-            except Exception as e: 
-                return {"error": str(e)}
-            return {'status': "OK"}
-        else:
-            abort(401)
+    @requires_admin
+    def post(self,token,is_admin):       
+        try:
+            db.session.execute("delete * from session;")
+        except Exception as e: 
+            return {"error": str(e)}
+        return {'status': "OK"}
+        

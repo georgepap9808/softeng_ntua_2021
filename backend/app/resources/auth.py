@@ -27,6 +27,21 @@ def requires_auth(f):
         return f(*args, **kwargs)
     return decorated
 
+def requires_admin(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('X-OBSERVATORY-AUTH')
+        if not token:
+            return custom_error('token', ['No authorization token provided']), ErrorCode.FORBIDDEN
+        user = User.query.filter(User.token == token).first()
+        if not user:
+            return custom_error('token', ['Invalid token']), ErrorCode.FORBIDDEN
+        if not user.is_admin:
+            return custom_error('is_admin', ['You need administrator privilleges to access this resource']), ErrorCode.FORBIDDEN
+        kwargs['is_admin'] = user.is_admin
+        kwargs['token'] = user.token
+        return f(*args, **kwargs)
+    return decorated
 
 def _login(user):
     '''
@@ -71,31 +86,28 @@ class LoginResource(Resource):
 
 
 class GetUserDataResource(Resource):
-    @requires_auth
+    @requires_admin
     def get(self,token,is_admin,username):
-        if not is_admin:
-            abort(401)
-        else:
-            try:
-                u = User.query.filter(User.username == username).first()
+        try:
+            u = User.query.filter(User.username == username).first()
 
-                return {
-                    "username":u.username,
-                    "first_name":u.first_name,
-                    "last_name":u.last_name,
-                    "country":u.country, 
-                    "city":u.city, 
-                    "street":u.street,
-                    "number": u.number, 
-                    "zip_code":u.zip_code
-                }
-            except Exception as e: 
-                return {"error":str(e)}
+            return {
+                "username":u.username,
+                "first_name":u.first_name,
+                "last_name":u.last_name,
+                "country":u.country, 
+                "city":u.city, 
+                "street":u.street,
+                "number": u.number, 
+                "zip_code":u.zip_code
+            }
+        except Exception as e: 
+            return {"error":str(e)}
 
 
 
 class RegisterResource(Resource):
-    @requires_auth
+    @requires_admin
     @use_args({
         #'email': fields.Str(required=True),
         'is_admin': fields.Bool(required=True),
@@ -110,8 +122,7 @@ class RegisterResource(Resource):
       #'format': fields.Str(missing='json', location='query', validate=validate.Equal('json'))
     },location='query')
     def post(self,args, token, is_admin,username,password):
-        if not is_admin:
-            abort(401)
+
         
         user = User(
           #  email=args['email'], 

@@ -25,6 +25,7 @@ class StationSchema(ma.SQLAlchemyAutoSchema):
 station_schema = StationSchema()
 
 class StationResource(Resource):
+    @requires_admin
     @use_args({
         'country':fields.Str(required=True),
         'city':fields.Str(required=True),
@@ -56,7 +57,7 @@ class StationResource(Resource):
         stat = Station.query.filter(Station.id == args['id']).first()
         return station_schema.dump(stat)
 
-
+    @requires_admin
     @use_args({    
         'id':fields.Int(required=True)
     })

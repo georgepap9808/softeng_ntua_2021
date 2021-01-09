@@ -24,8 +24,9 @@ class VehicleSchema(ma.SQLAlchemyAutoSchema):
         fields = ('user_id', 'registration_plate', 'manufacturer', 'model')
 vehicle_schema = VehicleSchema()
 
-#REQUIRES LOGINNNNNNN
+
 class VehicleResource(Resource):
+    @requires_auth
     @use_args({
         'user_id':fields.Int(required=True),
         'registration_plate':fields.Str(required=True),
@@ -49,7 +50,7 @@ class VehicleResource(Resource):
 
         return {"message":"OK"}
 
-    #requires logiiin
+    @requires_auth
     @use_args({
         'user_id':fields.Int(required=True)
     })
@@ -64,7 +65,7 @@ class VehicleResource(Resource):
         }
 
 
-    #requires LOGINNN   
+    @requires_auth  
     @use_args({    
         'registration_plate':fields.Str(required=True)
     })

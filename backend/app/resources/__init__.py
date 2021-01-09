@@ -23,7 +23,7 @@ api.add_resource(GetUserDataResource,'/admin/users/<username>')
 api.add_resource(VehicleResource,'/vehicle')
 api.add_resource(StationResource,'/station')
 api.add_resource(SubmitRatingResource,'/station/rating')
-
 api.add_resource(ProviderResource,'/provider')
+
 api.add_resource(HealthCheckResource,'/admin/healthcheck')
 api.add_resource(ResetSessionResource,'/admin/resetsessions')
