@@ -6,6 +6,7 @@ from app.resources.vehicle import VehicleResource
 from app.resources.station import StationResource,SubmitRatingResource
 from app.resources.provider import ProviderResource
 from app.resources.helpers import HealthCheckResource,ResetSessionResource
+from app.resources.session import SessionUploadResource
 
 @parser.error_handler
 def handle_request_parsing_error(err, *_unused):
@@ -13,7 +14,7 @@ def handle_request_parsing_error(err, *_unused):
 
 
 api = Api(prefix='/evcharge/api')
-api.add_resource(HelloWorldResource, '/hello/<test>')
+api.add_resource(HelloWorldResource, '/hello')
 
 api.add_resource(LoginResource,'/login')
 api.add_resource(LogoutResource,'/logout')
@@ -27,3 +28,6 @@ api.add_resource(ProviderResource,'/provider')
 
 api.add_resource(HealthCheckResource,'/admin/healthcheck')
 api.add_resource(ResetSessionResource,'/admin/resetsessions')
+
+
+api.add_resource(SessionUploadResource, '/admin/system/sessionsupd')

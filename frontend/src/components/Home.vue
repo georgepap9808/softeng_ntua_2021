@@ -11,25 +11,25 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <router-link class="nav-link pr-3" to="/home"> Home </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Account Info</a>
+            <router-link class="nav-link pr-3" to="/user_info"> Account Info </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Billing Info</a>
+              <router-link class="nav-link pr-3" to="/bills">Billing Info</router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Past Charges</a>
+              <router-link class="nav-link pr-3" to="/charges">Past Charges </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Add a Vehicle</a>
+              <router-link class="nav-link pr-3" to="/add_car"> Add a Car </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Rate a Station</a>
+              <router-link class="nav-link pr-3" to="/rate"> Rate a Station </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Statistics</a>
+              <router-link class="nav-link pr-3" to="/stats"> Statistics </router-link>
             </li>
           </ul>
         </div>

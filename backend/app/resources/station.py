@@ -75,6 +75,7 @@ class StationResource(Resource):
 
 #requires login from user
 class SubmitRatingResource(Resource):
+    @requires_auth
     @use_args({
         "id":fields.Int(required=True),
         "rating":fields.Int(required=True)

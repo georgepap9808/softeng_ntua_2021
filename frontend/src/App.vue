@@ -9,29 +9,27 @@
 </template>
 
 <script>
-    export default {
-        name: 'App',
-        data() {
-            return {
-                authenticated: false,
-                mockAccount: {
-                    email: "nef@mail.com",
-                    password: "password"
-                }
-            }
-        },
-        mounted() {
-            if(!this.authenticated) {
-                //this.$router.replace({ name: "login" });
-            }
-        },
-        methods: {
-            setAuthenticated(status) {
-                this.authenticated = status;
-            },
-            logout() {
-                this.authenticated = false;
-            }
-        }
+export default {
+  computed : {
+    isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
+  },
+  methods: {
+    logout: function () {
+      this.$store.dispatch('logout')
+      .then(() => {
+        this.$router.push('/login')
+      })
     }
+  },
+  created: function () {
+  this.$http.interceptors.response.use(undefined, function (err) {
+    return new Promise(function (resolve, reject) {
+      if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+        this.$store.dispatch(logout)
+      }
+      throw err;
+    });
+  });
+  }
+}
 </script>

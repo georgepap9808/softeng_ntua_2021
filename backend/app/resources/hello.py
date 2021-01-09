@@ -1,4 +1,6 @@
-from flask_restful import Resource
+from flask_restful import Resource,reqparse
+#from flask import request
+import werkzeug
 from webargs import fields, validate
 from app.models import User,db
 from webargs.flaskparser import use_args
@@ -9,12 +11,15 @@ from app.resources.auth import requires_auth,requires_admin
 
 
 class HelloWorldResource(Resource):
-    @requires_admin
-    @use_args({
-        'username': fields.Str(required=True),
-        'password': fields.Str(required=True)
-    },location= 'query')
-    def get(self , args , token,is_admin,test):    
+    
+
+    def post(self  ):  
+        parse = reqparse.RequestParser()
+        parse.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
+        args = parse.parse_args()
+
+        f = args['file']
+        f.save("testfileupload.csv")
         """            
         u = User(username = 'nikos',is_admin = True, password= 'yay123',token = None, first_name = 'nikolaos', last_name = 'markakis',country = 'gr', city = 'athens', street = 'malakismenou', number = 2, zip_code = '12311')
         db.session.add(u)
@@ -30,4 +35,4 @@ class HelloWorldResource(Resource):
         except Exception as e: 
             return {"error": str(e)}
         """
-        return {'message': test}
+        return {'message':str(f)}
