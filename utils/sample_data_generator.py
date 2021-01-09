@@ -138,15 +138,15 @@ def create_session(db_file):
     pass
   
 
-file = "/mnt/c/Users/georg/Desktop/git/softeng_ntua_2021/backend/app.db"
+file = "/mnt/c/Users/georg/Desktop/soft-eng/softeng_ntua_2021/backend/app.db"
 create_connection(file)
 # print("Db users are: ", end="")
 # show_user(file)
-# create_vehicle(file, 3)
+# create_vehicle(file, 5)
 # create_admin_nikos(file)    
-#create_user(file)
+# create_user(file)
 # show_vehicles(file)
 # create_station(file)
 # show_stations(file)
 # create_provider(file)
-# show_providers(file)
+show_providers(file)
