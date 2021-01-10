@@ -4,7 +4,7 @@ from flask_restful import reqparse
 from webargs.flaskparser import use_args
 from webargs import fields, validate
 import time
-
+import datetime
 
 import marshmallow
 from marshmallow import post_dump
@@ -20,6 +20,10 @@ import json
 import csv
 import os
 
+
+def parse_datetime(s):
+    return datetime.datetime(int(s[0:4]),int(s[5:7]),int(s[8:10]),int(s[11:13]),int(s[14:16]),0)
+
 class SessionUploadResource(Resource):
     @requires_admin
     def post(self, token,is_admin):
@@ -31,12 +35,44 @@ class SessionUploadResource(Resource):
         if not os.path.isdir("files/"):
             os.mkdir("files/")
         
-        f.save("files/"+str(time.time()))
+        path = "files/"+str(time.time())
+        f.save(path)
 
-        print(str(f))
+        f = open(path,mode = "r")
+        reader = csv.reader(f)
+        next(reader,None)
+
+        count = 0
+        file_count = sum(1 for row in reader)
+        f.close()
+
+        f = open(path,mode = "r")
+        reader = csv.reader(f)
+        next(reader,None)
+
+        for row in reader: 
+            sess = Session(
+                user_id = int(row[0]),
+                station_id = int(row[1]),
+                registration_plate = row[2],
+                starting_time = parse_datetime(row[3]),
+                finishing_time = parse_datetime( row[4]),
+                kwh_cost = float(row[5]), 
+                provider_id = int(row[6])
+                )
+            
+            try: 
+                db.session.add(sess)
+                db.session.commit()
+                count=count+1
+            except IntegrityError as e:
+                db.session.rollback()
+                return custom_error('some sql error',[str(e._message)])
+                
+        
+        total = db.session.query(Session).count()
         return {
-            "SessionsInUploadedFile":0,
-            "SessionsImported":0,
-            "TotalSessionsInDatabase":0,
-            "content":0
+            "SessionsInUploadedFile":file_count,
+            "SessionsImported":count,
+            "TotalSessionsInDatabase":total
         }

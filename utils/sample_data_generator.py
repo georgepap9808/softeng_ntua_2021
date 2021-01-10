@@ -190,7 +190,7 @@ def create_session(db_file):
         print(p)
 
 #----------------------------------------------------------------------------
-    """
+"""
     user_id FK
     station_id FK
     registration_plate FK
@@ -282,7 +282,7 @@ def create_session_2(db_file):
     provider.execute('select name, kwh_cost from provider')
 
     pid = r.randint(1,4)
-    print(pid)
+    #print(pid)
     kwh_cost = provider.fetchall()[pid-1][1]
     #print(pid,kwh_cost)
 
@@ -293,18 +293,19 @@ def create_session_2(db_file):
     f_hour = str(f).zfill(2)
     starting_time = '20'+str(r.randint(19,20))+'-'+str(r.randint(1,12)).zfill(2)+'-'+str(r.randint(1,29)).zfill(2)+' '+s_hour+':'+str(r.randint(0,59)).zfill(2)
     finishing_time = starting_time[:11]+f_hour+starting_time[13:]
-    print(starting_time)
-    print(finishing_time)
+    #print(starting_time)
+    #print(finishing_time)
     
 #----insert session----------------------------------
     try:
-        conn.execute("INSERT INTO session(user_id, station_id, registration_plate, starting_time, finishing_time, kwh_cost, provider_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
-        (user_id, station_id,plate, starting_time, finishing_time, kwh_cost, pid))
-        conn.commit()
+        #conn.execute("INSERT INTO session(user_id, station_id, registration_plate, starting_time, finishing_time, kwh_cost, provider_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
+        #(user_id, station_id,plate, starting_time, finishing_time, kwh_cost, pid))
+        print(str(user_id)+","+str(station_id)+","+str(plate)+","+str(starting_time)+","+str(finishing_time)+","+str(kwh_cost)+","+str(pid))
+        #conn.commit()
     except Exception as e: 
         print(e)    
-   
- '''   
+
+
 for i in range(20):
     create_session_2(file)
-'''
+
