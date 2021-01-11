@@ -1,6 +1,6 @@
 <template>
   <!-- Navigation Bar -->
-   <div class = "home_general">
+<div class = "sessions">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
    <a class="navbar-brand"> EV Charging System</a>
    <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -38,30 +38,8 @@
      </ul>
    </div>
  </nav>
-
-   <div class = "text">
-     <h1> EV Charging <br> Management Software </h1>
-     <h2> Lets you track,
-      manage and optimize electrical
-      vehicle charging. </h2>
-   </div>
-
-   <div class = "image"> </div>
-
-   <div class = "project">
-     <p> A project for Software Engineering, NTUA 2021 </p>
-   </div>
-
- </div>
+</div>
 </template>
-
-<script>
-export default {
-        components:{
-        }
-}
-</script>
-
 
 <style>
   * {
@@ -80,24 +58,5 @@ export default {
     font-size: 20px;
     text-align: left;
     margin-bottom: 30px;
-  }
-  p {
-    font-size: 16px;
-    text-align: center;
-  }
-  .text {
-    padding-top: 150px;
-    margin: auto;
-    padding-left: auto;
-    width: 50%;
-    /*border: 2px solid black; */
-  }
-  .image {
-    width: 500px;
-    height: 400px;
-    background-image: url(../assets/car.png);
-    margin: auto;
-    background-size: 100%;
-    background-repeat: no-repeat;
   }
 </style>

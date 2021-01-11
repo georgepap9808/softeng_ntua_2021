@@ -2,60 +2,58 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    status: '',
-    token: localStorage.getItem('token') || '',
-    user : {}
-  },
-  mutations: {
-    auth_request(state){
-      state.status = 'loading'
+    state: {
+        LoggedIn: false,
+        token: localStorage.getItem('token') || '',
+        user_id : ""
     },
-    auth_success(state, token){
-      state.status = 'success'
-      state.token = token
+    mutations: {
+        login(state,payload) {
+            state.token = payload.token
+            state.user_id = payload.user_id
+            state.LoggedIn = true
+        },
+        logout(state) {
+            state.token = ''
+            state.user_id = ''
+            state.LoggedIn = false
+        }
     },
-    auth_error(state){
-      state.status = 'error'
+    actions: {
+        login ({commit},creds) {
+            return new Promise((resolve,reject) =>{
+                axios({url: 'https://localhost:8765/evcharge/api/login', data: creds, method: 'POST' })
+                .then(response => {
+                    const token = response.data.token
+                    const user_id = response.data.id
+                    localStorage.setItem('token', token)
+                    localStorage.setItem('user_id', user_id)
+                    axios.defaults.headers.common['Authorization'] = token
+                    commit("login",{token:token,user_id:user_id})
+                    resolve(response)
+                })
+                    .catch( err => {
+                      localStorage.removeItem('token')
+                      reject(err)
+                    })
+            })
+        },
+        logout ({commit}) {
+            return new Promise((resolve) =>{
+              localStorage.removeItem('token')
+              localStorage.removeItem('user_id')
+              delete axios.defaults.headers.common['Authorization']
+              commit('logout')
+              resolve()
+            })
+        }
     },
-    logout(state){
-      state.status = ''
-      state.token = ''
-    },
-  },
-  actions: {
-    login({commit}, user){
-    return new Promise((resolve, reject) => {
-      commit('auth_request')
-      axios({url: 'https://localhost:8765/evcharge/api/auth', data: user, method: 'POST' })
-      .then(response => {
-        const token = response.data.token
-        localStorage.setItem('token', token)
-        axios.defaults.headers.common['Authorization'] = token
-        commit('auth_success', token)
-        resolve(response)
-      })
-      .catch(err => {
-        commit('auth_error')
-        localStorage.removeItem('token')
-        reject(err)
-      })
-    })
-  },
-  logout({commit}){
-    return new Promise((resolve, reject) => {
-      commit('logout')
-      localStorage.removeItem('token')
-      delete axios.defaults.headers.common['Authorization']
-      resolve()
-    })
-  }
-},
-  getters : {
-    isLoggedIn: state => !!state.token,
-    authStatus: state => state.status,
-  }
-})
+    getters: {
+        user_id: state => state.user_id,
+        token: state => state.token,
+        LoggedIn: state => state.LoggedIn,
+    }
+});
