@@ -107,3 +107,51 @@ class SessionsPerDateResource(Resource):
             "total":total,
             "sessions":session_schema.dump(res.all(),many=True)
         }
+
+class SessionsPerEVResource(Resource): 
+    @requires_auth
+    @use_args({
+        'id':fields.Int(required=True),
+        'registration_plate':fields.Str(required=True)
+    },location = 'query')
+    def get(self, args , token , is_admin,date_from,date_to):
+        query = Session.query
+        res = query.filter(Session.user_id == args['id'],Session.registration_plate == args['registration_plate'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        total = res.count()
+
+        return{
+            "total":total,
+            "sessions":session_schema.dump(res.all(),many=True)
+        }
+
+class SessionsPerProviderResource(Resource): 
+    @requires_auth
+    @use_args({
+        'id':fields.Int(required=True),
+        'provider_id':fields.Int(required=True)
+    },location = 'query')
+    def get(self, args , token , is_admin,date_from,date_to):
+        query = Session.query
+        res = query.filter(Session.user_id == args['id'],Session.provider_id==args['provider_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        total = res.count()
+
+        return{
+            "total":total,
+            "sessions":session_schema.dump(res.all(),many=True)
+        }
+
+class SessionsPerStationResource(Resource): 
+    @requires_auth
+    @use_args({
+        'id':fields.Int(required=True),
+        'station_id':fields.Int(required=True)
+    },location = 'query')
+    def get(self, args , token , is_admin,date_from,date_to):
+        query = Session.query
+        res = query.filter(Session.user_id == args['id'],Session.station_id==args['station_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        total = res.count()
+
+        return{
+            "total":total,
+            "sessions":session_schema.dump(res.all(),many=True)
+        }
