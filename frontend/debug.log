@@ -5,3 +5,4 @@
 [0109/113947.820:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\User\AppData\Local\AVG\Browser\User Data\Crashpad\attachments\0aa32b47-8293-497f-9c8d-91334dafd4b1: Το σύστημα δεν είναι σε θέση να εντοπίσει την καθορισμένη διαδρομή δίσκου. (0x3)
 [0109/113947.841:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\User\AppData\Local\AVG\Browser\User Data\Crashpad\attachments\0db90ff3-e342-4f7f-a8c1-67f62f00955d: Το σύστημα δεν είναι σε θέση να εντοπίσει την καθορισμένη διαδρομή δίσκου. (0x3)
 [0109/113947.862:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\User\AppData\Local\AVG\Browser\User Data\Crashpad\attachments\94aeec52-6cc7-4271-9d6a-9433d828aac0: Το σύστημα δεν είναι σε θέση να εντοπίσει την καθορισμένη διαδρομή δίσκου. (0x3)
+[0110/162421.017:ERROR:directory_reader_win.cc(43)] FindFirstFile: Το σύστημα δεν είναι σε θέση να εντοπίσει την καθορισμένη διαδρομή δίσκου. (0x3)
