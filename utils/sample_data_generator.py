@@ -298,14 +298,14 @@ def create_session_2(db_file):
     
 #----insert session----------------------------------
     try:
-        #conn.execute("INSERT INTO session(user_id, station_id, registration_plate, starting_time, finishing_time, kwh_cost, provider_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
-        #(user_id, station_id,plate, starting_time, finishing_time, kwh_cost, pid))
-        print(str(user_id)+","+str(station_id)+","+str(plate)+","+str(starting_time)+","+str(finishing_time)+","+str(kwh_cost)+","+str(pid))
-        #conn.commit()
+        conn.execute("INSERT INTO session(user_id, station_id, registration_plate, starting_time, finishing_time, kwh_cost, provider_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
+        (user_id, station_id,plate, starting_time, finishing_time, kwh_cost, pid))
+        #print(str(user_id)+","+str(station_id)+","+str(plate)+","+str(starting_time)+","+str(finishing_time)+","+str(kwh_cost)+","+str(pid))
+        conn.commit()
     except Exception as e: 
         print(e)    
 
 
-for i in range(20):
+for i in range(5):
     create_session_2(file)
 

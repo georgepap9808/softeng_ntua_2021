@@ -6,7 +6,7 @@ from app.resources.vehicle import VehicleResource
 from app.resources.station import StationResource,SubmitRatingResource
 from app.resources.provider import ProviderResource
 from app.resources.helpers import HealthCheckResource,ResetSessionResource
-from app.resources.session import SessionUploadResource
+from app.resources.session import SessionUploadResource,SessionsPerDateResource
 
 @parser.error_handler
 def handle_request_parsing_error(err, *_unused):
@@ -31,3 +31,5 @@ api.add_resource(ResetSessionResource,'/admin/resetsessions')
 
 
 api.add_resource(SessionUploadResource, '/admin/system/sessionsupd')
+#to date na exei morfi 'yyyy-mm-dd' prosoxi sta 00 diladi theloume '2020-09-03' oxi  '2020-9-3'!!!!!!!!
+api.add_resource(SessionsPerDateResource,'/SessionsPerDate/<date_from>/<date_to>')
