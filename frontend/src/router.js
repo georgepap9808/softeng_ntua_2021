@@ -16,16 +16,16 @@ const routes = [
     component: () => import('./components/Logout.vue')
   },
   {
-    path: '/home',
-    name: 'home',
+    path: '/Home',
+    name: 'Home',
     component: () => import('./components/Home.vue'),
   //  meta: {
   //    requiresAuth: true
   //  }
   },
   {
-    path: '/addcar',
-    name: 'addcar',
+    path: '/AddVehicle',
+    name: 'AddVehicle',
     component: () => import('./components/AddVehicle.vue'),
   //  meta: {
   //    requiresAuth: true

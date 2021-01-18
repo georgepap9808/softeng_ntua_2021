@@ -43,7 +43,7 @@
                     name: this.name,
                     password: this.password,
         }).then(() =>
-          this.$router.push('/'))
+          this.$router.push('/Home'))
         .catch(err => console.log(err))
       }
     }

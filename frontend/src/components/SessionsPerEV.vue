@@ -1,18 +1,18 @@
 <template>
   <!-- Navigation Bar -->
-<div class = "sessions">
+<div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
    <a class="navbar-brand"> EV Charging System</a>
    <div class="collapse navbar-collapse" id="navbarNavDropdown">
      <ul class="navbar-nav">
        <li class="nav-item active">
-         <router-link class="nav-link" to="/home">Home</router-link>
+         <router-link class="nav-link" to="/Home">Home</router-link>
        </li>
        <li class="nav-item">
-        <router-link class="nav-link" to="/myinfo"> Account Info </router-link>
+        <router-link class="nav-link" to="/Myinfo"> Account Info </router-link>
        </li>
        <li class="nav-item">
-        <router-link class="nav-link" to="/bills"> Billing Info </router-link>
+        <router-link class="nav-link" to="/Bills"> Billing Info </router-link>
        </li>
        <li class="nav-item dropdown">
          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -25,10 +25,10 @@
          </div>
        </li>
        <li class="nav-item">
-        <router-link class="nav-link" to="/addcar"> Add a new Vehicle </router-link>
+        <router-link class="nav-link" to="/AddVehicle"> Add a new Vehicle </router-link>
        </li>
        <li class="nav-item">
-        <router-link class="nav-link" to="/stats"> Statistics </router-link>
+        <router-link class="nav-link" to="/Statistics"> Statistics </router-link>
        </li>
        <ul class="nav justify-content-end">
          <li class="nav-item">
@@ -38,7 +38,29 @@
      </ul>
    </div>
  </nav>
-</div>
+
+
+   <form class = "date_form" @submit.prevent = "add_date">
+     <div class="form-group row">
+       <label for="example-date-input" class="col-2 col-form-label">Start Date :</label>
+       <div class="col-10">
+         <input class="form-control" type="date" value="2021-01-01" id="example-date-input">
+       </div>
+     </div>
+
+     <div class="form-group row">
+       <label for="example-date-input" class="col-2 col-form-label">End Date :</label>
+       <div class="col-10">
+         <input class="form-control" type="date" value="2021-01-01" id="example-date-input">
+       </div>
+     </div>
+     <div class = "button_dates">
+       <button type="submit" class="btn btn-dark btn-lg btn-block"> See Charges </button>
+     </div>
+   </form>
+
+   <div class = "image_adddate"> </div>
+  </div>
 </template>
 
 <style>
@@ -58,5 +80,26 @@
     font-size: 20px;
     text-align: left;
     margin-bottom: 30px;
+  }
+  .date_form {
+    margin: auto;
+    width: 50%;
+    padding-top: 150px;
+  }
+  .button_dates {
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+  }
+  .image_adddate {
+   width: 330px;
+   height: 300px;
+   background-image: url(../assets/adddates1.png);
+   margin-top: 100px;
+   margin-left: auto;
+   margin-right: auto;
+   background-size: 100%;
+   background-repeat: no-repeat;
   }
 </style>
