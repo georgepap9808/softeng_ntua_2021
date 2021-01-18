@@ -24,7 +24,13 @@ import os
 def parse_datetime(s):
     return datetime.datetime(int(s[0:4]),int(s[5:7]),int(s[8:10]),int(s[11:13]),int(s[14:16]),0)
 
+def parse_date(s):
+    return datetime.date(int(s[0:4]),int(s[5:7]),int(s[8:10]))
+
 class SessionUploadResource(Resource):
+
+
+    
     @requires_admin
     def post(self, token,is_admin):
         parse = reqparse.RequestParser()
@@ -75,4 +81,77 @@ class SessionUploadResource(Resource):
             "SessionsInUploadedFile":file_count,
             "SessionsImported":count,
             "TotalSessionsInDatabase":total
+        }
+
+
+class SessionSchema(ma.SQLAlchemyAutoSchema):
+
+    class Meta:
+        model = Session
+        # Fields to be included in the output
+        fields = ('id','station_id','registration_plate','user_id','starting_time','finishing_time','kwh_cost','provider_id' )
+session_schema =SessionSchema()
+
+
+class SessionsPerDateResource(Resource): 
+    @requires_auth
+    @use_args({
+        'id':fields.Int(required=True)
+    },location = 'query')
+    def get(self, args , token , is_admin,date_from,date_to):
+        query = Session.query
+        res = query.filter(Session.user_id == args['id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        total = res.count()
+
+        return{
+            "total":total,
+            "sessions":session_schema.dump(res.all(),many=True)
+        }
+
+class SessionsPerEVResource(Resource): 
+    @requires_auth
+    @use_args({
+        'id':fields.Int(required=True),
+        'registration_plate':fields.Str(required=True)
+    },location = 'query')
+    def get(self, args , token , is_admin,date_from,date_to):
+        query = Session.query
+        res = query.filter(Session.user_id == args['id'],Session.registration_plate == args['registration_plate'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        total = res.count()
+
+        return{
+            "total":total,
+            "sessions":session_schema.dump(res.all(),many=True)
+        }
+
+class SessionsPerProviderResource(Resource): 
+    @requires_auth
+    @use_args({
+        'id':fields.Int(required=True),
+        'provider_id':fields.Int(required=True)
+    },location = 'query')
+    def get(self, args , token , is_admin,date_from,date_to):
+        query = Session.query
+        res = query.filter(Session.user_id == args['id'],Session.provider_id==args['provider_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        total = res.count()
+
+        return{
+            "total":total,
+            "sessions":session_schema.dump(res.all(),many=True)
+        }
+
+class SessionsPerStationResource(Resource): 
+    @requires_auth
+    @use_args({
+        'id':fields.Int(required=True),
+        'station_id':fields.Int(required=True)
+    },location = 'query')
+    def get(self, args , token , is_admin,date_from,date_to):
+        query = Session.query
+        res = query.filter(Session.user_id == args['id'],Session.station_id==args['station_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        total = res.count()
+
+        return{
+            "total":total,
+            "sessions":session_schema.dump(res.all(),many=True)
         }

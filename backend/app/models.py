@@ -95,8 +95,8 @@ class Session(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey("user.id"))
     station_id = db.Column(db.Integer,db.ForeignKey("station.id") )
     registration_plate = db.Column(db.String(10),db.ForeignKey("vehicle.registration_plate"))
-    starting_time = db.Column(db.DateTime, nullable = False)
-    finishing_time = db.Column(db.DateTime, nullable = False)
+    starting_time = db.Column(db.String(30), nullable = False)
+    finishing_time = db.Column(db.String(30), nullable = False)
     kwh_cost = db.Column(db.Float, nullable = False)
     provider_id = db.Column(db.Integer,db.ForeignKey("provider.id"))
 
