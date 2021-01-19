@@ -7,6 +7,7 @@ from app.resources.station import StationResource,SubmitRatingResource
 from app.resources.provider import ProviderResource
 from app.resources.helpers import HealthCheckResource,ResetSessionResource
 from app.resources.session import SessionUploadResource,SessionsPerDateResource,SessionsPerEVResource,SessionsPerProviderResource,SessionsPerStationResource
+from app.resources.bill import Bill
 
 @parser.error_handler
 def handle_request_parsing_error(err, *_unused):
@@ -24,6 +25,9 @@ api.add_resource(GetUserDataResource,'/admin/users/<username>')
 api.add_resource(VehicleResource,'/vehicle')
 api.add_resource(StationResource,'/station')
 api.add_resource(SubmitRatingResource,'/station/rating')
+
+api.add_resource(Bill,'/bill')
+
 api.add_resource(ProviderResource,'/provider')
 
 api.add_resource(HealthCheckResource,'/admin/healthcheck')
