@@ -101,9 +101,12 @@ class Session(db.Model):
     provider_id = db.Column(db.Integer,db.ForeignKey("provider.id"))
 
 class Bill(db.Model):
+    __tablename__='bill'
+    
     id  = db.Column(db.Integer,primary_key= True, autoincrement = True)
     user_id = db.Column(db.Integer,db.ForeignKey("user.id"))
     period_start_date = db.Column(db.String(30), nullable = False)
     period_end_date = db.Column(db.String(30), nullable = False)
     total_cost = db.Column(db.Float,nullable=True)
     is_paid = db.Column(db.Boolean, default=False, nullable=False)
+

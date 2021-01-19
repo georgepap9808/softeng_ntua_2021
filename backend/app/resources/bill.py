@@ -8,7 +8,7 @@ from marshmallow import post_dump
 
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from app.models import Bill, db,ma
+from app.models import Bill,Session, db,ma
 from app.resources.utils import custom_error, ErrorCode
 
 from app.resources.auth import requires_auth,requires_admin
@@ -24,18 +24,19 @@ class BillSchema(ma.SQLAlchemyAutoSchema):
 bill_schema =BillSchema()
 
 def update_bills(user_id):
-    #TO BE IMPLEMENTED
+    sessions = Session.query.filter(Session.user_id==user_id).order_by(Session.starting_time)
+    bills = Bill.query.filter(Bill.user_id ==user_id).order_by(Bill.period_start_date.desc())
     pass
 
-class Bill(Resource):
+class BillResource(Resource):
     @requires_auth
-    @user_args({
+    @use_args({
         'user_id':fields.Int(required=True)
-    },location = 'qurey')
-    def get(self,args,token,is_admin)
+    },location = 'query')
+    def get(self,args,token,is_admin):
         update_bills(args['user_id'])
         query = Bill.query
-        res = query.filter(Bill.user_id == args['user_id']).order_by(Bill.period_end_date).desc()
+        res = query.filter(Bill.user_id == args['user_id']).order_by(Bill.period_start_date.desc())
         total = res.count()
 
         return{
