@@ -86,3 +86,27 @@ class BillResource(Resource):
             "total":total,
             "bills":bill_schema.dump(res.all(),many=True)
         }
+
+    @requires_auth
+    @use_args({
+        'bill_id':fields.Int(required=True)
+    },location='query')
+    def put(self,args,token,is_admin):
+        
+        b = Bill.query.filter(Bill.id == args['bill_id']).first()
+        if b.is_paid: 
+            return{
+                "message":"bill already paid"
+            }
+
+        b.is_paid = True
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            return custom_error('some sql error',[str(e._message)])
+
+        return {
+            'message': 'OK' 
+            }    
+    
