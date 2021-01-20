@@ -2,7 +2,7 @@ from flask import request
 from webargs.flaskparser import use_args
 from webargs import fields, validate
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,func
 
 import marshmallow
 from marshmallow import post_dump
@@ -30,42 +30,46 @@ def update_bills(user_id):
     bills = Bill.query.filter(Bill.user_id ==user_id).order_by(Bill.period_start_date.desc())
 
 
-    engine = create_engine('sqlite:///app.db')
-    con = engine.connect()
-    rs = con.execute("select sum( (CAST( substr(finishing_time,12,2) AS INTEGER)-CAST(substr(starting_time,12,2) AS INTEGER))*kwh_cost ),substr(starting_time,0,8)  from session where user_id = ?  group by substr(starting_time,0,8) ;",(user_id))
-
-    for r in rs:
-        print(r)
-
-    #if sessions.count() == 0:
-    #    return
-
-    
-
-    
-    """
     last_bill = bills.first()
     last_bill_date = '0000-00-00 00:00:00'
 
     if last_bill is not None:
         last_bill_date = last_bill.period_end_date
-
-    for ses in sessions.all():
-        #print(ses.starting_time[0:7]+'-00') 
-        '''
-        if ses.finishing_time > last_bill_date:
-            b = Bill(
-                user_id= int(user_id)
-                period_start_date = ses.starting_time[0:7]+'-00'
-                period_end_date = ses.starting_time[0:7]+'-31'   #tha einai panta 31 opote mhn tupwseis ending date sto frontend apla tupose oti e;inai gia ;ena mhna
-                total_cost_ = #provlimaaa
-                is_paid = Flase
-            )
-        '''
-    """
+    '''
+    engine = create_engine('sqlite:///app.db')
+    con = engine.connect()
+    rs = con.execute("select sum( (CAST( substr(finishing_time,12,2) AS INTEGER)-CAST(substr(starting_time,12,2) AS INTEGER))*kwh_cost ) as cost ,substr(starting_time,0,8) as month  from session where user_id = ?  and substr(starting_time,0,8)>? group by substr(starting_time,0,8) ;",(user_id,last_bill_date))
+    '''
+    rs = db.session.query( func.sum((func.substr(Session.finishing_time,12,2).cast(db.Integer)-func.substr(Session.starting_time,12,2).cast(db.Integer))*Session.kwh_cost),func.substr(Session.starting_time,0,8)).group_by(func.substr(Session.starting_time,0,8)).filter(Session.user_id == user_id,Session.starting_time>last_bill_date)
 
 
-    pass
+
+    for r in rs:
+        print(r[0],r[1])
+    
+        b = Bill(
+            user_id = user_id, 
+            period_start_date = str(r[1])+'-00',
+            period_end_date = str(r[1])+'-31',
+            total_cost = r[0],
+            is_paid = False
+        )
+
+        print(b)
+
+        db.session.add(b)
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            return custom_error('some sql error',[str(e._message)])
+    
+    
+    
+
+
+
+    
 
 class BillResource(Resource):
     @requires_auth
