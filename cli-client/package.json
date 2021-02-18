@@ -1,20 +1,24 @@
 {
-  "name": "ev-cli",
-  "version": "0.0.0",
-  "description": "A CLI for our EV charging app",
-  "main": "src/cli.js",
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "A CLI",
+  "main": "src/index.js",
+  "bin": {
+    "ev_groupXX": "bin/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "cli-client"
+  ],
   "author": "Dimos",
-  "license": "ISC",
-  "bin": {
-    "ev_groupXX": "./bin/index.js"
-  },
+  "license": "MIT",
   "dependencies": {
-    "axios": "^0.19.2",
-    "boxen": "^4.0.0",
-    "chalk": "^2.4.2",
-    "yargs": "^13.2.4"
+    "axios": "^0.21.1",
+    "commander": "^7.1.0",
+    "esm": "^3.2.25",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0"
   }
 }
