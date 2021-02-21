@@ -8,13 +8,12 @@ const agent = new https.Agent({
 	rejectUnauthorized: false,
 });
 
-
 export function cli(args) {
 
     program
 		.command('login')
-		.requiredOption('--format <value>')
-        .requiredOption('--apikey <value>')
+		//.option('--format <value>', 'Insert format, json or csv', 'json')
+        //.option('--apikey <value>')
 		.requiredOption('--username <value>', 'User\'s username')
 		.requiredOption('--passw <value>', 'User\'s password')
 		.action(function (command) {
@@ -37,8 +36,8 @@ export function cli(args) {
     
     program
 		.command('logout')
-        .requiredOption('--format <value>')
-        .requiredOption('--apikey <value>')
+        //.option('--format <value>', 'Insert format, json or csv', 'json')
+        //.option('--apikey <value>')
 		.action(function (command) {
 			axios.post(`${base_url}/logout?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent })
 				.then(function (response) {
@@ -59,8 +58,8 @@ export function cli(args) {
 
 	program
 		.command('SessionsPerPoint')
-		.requiredOption('--format <value>')
-        .requiredOption('--apikey <value>')
+		//.option('--format <value>', 'Insert format, json or csv', 'json')
+        //.option('--apikey <value>')
 		.requiredOption('--point <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -84,8 +83,8 @@ export function cli(args) {
 
     program
 		.command('SessionsPerStation')
-		.requiredOption('--format <value>')
-        .requiredOption('--apikey <value>')
+		//.option('--format <value>', 'Insert format, json or csv', 'json')
+        //.option('--apikey <value>')
 		.requiredOption('--station <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -109,8 +108,8 @@ export function cli(args) {
 
     program
 		.command('SessionsPerEV')
-		.requiredOption('--format <value>')
-        .requiredOption('--apikey <value>')
+		//.option('--format <value>', 'Insert format, json or csv', 'json')
+        //.option('--apikey <value>')
 		.requiredOption('--ev <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -134,8 +133,8 @@ export function cli(args) {
 
     program
 		.command('SessionsPerProvider')
-		.requiredOption('--format <value>')
-        .requiredOption('--apikey <value>')
+		//.option('--format <value>', 'Insert format, json or csv', 'json')
+        //.option('--apikey <value>')
 		.requiredOption('--provider <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -162,8 +161,8 @@ export function cli(args) {
     //passw no spaces
 	program
 		.command('Admin')
-		.requiredOption('--format <value>')
-        .requiredOption('--apikey <value>')
+		//.option('--format <value>', 'Insert format, json or csv', 'json')
+        //.option('--apikey <value>')
 		.option('--username <value>', 'User\'s username')
         .option('--passw <value>', 'User\'s password')
 		.option('--users <value>')
@@ -177,7 +176,7 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				if (command.usermod){
+				if (command.usermod && command.username && command.passw){
                     axios.post(`${base_url}/admin/usermod/:${command.username}/:${command.passw}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
                         .then(function (response) {
                             // handle success
@@ -188,7 +187,10 @@ export function cli(args) {
                             console.log('{ status: \'error\' }');
                         })
                 }
-                else if(command.users){
+				else if(command.usermod){
+					console.log('username and password are required to modify user');
+				}
+				if(command.users){
                     axios.get(`${base_url}/admin/users/:${command.username}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
                         .then(function (response) {
                             // handle success
@@ -200,10 +202,42 @@ export function cli(args) {
                             console.log('{ status: \'error\' }');
                         })
                 }
-                // else if(command.sessionsupd){
-					
-				// }
-
+                else if(command.sessionsupd && command.source){
+					axios.post(`${base_url}/admin/system/sessionsupd/${command.source}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					.then(function (response) {
+						// handle success
+						console.log(response.data);
+					})
+					.catch(function (error) {
+						// handle error
+						console.log('{ status: \'error\' }');
+					})
+				}
+				else if(command.sessionsupd){
+					console.log('source option is required for sessionsupd');
+				}
+				else if(command.healthcheck){
+					axios.get(`${base_url}/admin/healthcheck?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					.then(function (response) {
+						// handle success
+						console.log(response.data);
+					})
+					.catch(function (error) {
+						// handle error
+						console.log('{ status: \'error\' }');
+					})
+				}
+				else if(command.resetsessions){
+					axios.post(`${base_url}/admin/resetsessions?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					.then(function (response) {
+						// handle success
+						console.log(response.data);
+					})
+					.catch(function (error) {
+						// handle error
+						console.log('{ status: \'error\' }');
+					})
+				}
 			})
 		});
     

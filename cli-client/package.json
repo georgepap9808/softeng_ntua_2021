@@ -4,7 +4,7 @@
   "description": "A CLI",
   "main": "src/index.js",
   "bin": {
-    "ev_groupXX": "bin/index.js"
+    "ev_group70": "bin/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
