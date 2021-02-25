@@ -1,42 +1,48 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+    plugins: [createPersistedState({
+      storage: window.sessionStorage,
+    })],
     state: {
         LoggedIn: false,
-        token: localStorage.getItem('token') || '',
-        user_id : ""
+        token: "default_token",
+        user_id : "",
+        username: ''
     },
     mutations: {
         login(state,payload) {
             state.token = payload.token
             state.user_id = payload.user_id
+            state.username = payload.username
             state.LoggedIn = true
         },
         logout(state) {
             state.token = ''
             state.user_id = ''
+            state.username = ''
             state.LoggedIn = false
         }
     },
     actions: {
         login ({commit},creds) {
             return new Promise((resolve,reject) =>{
-                axios({url: 'https://localhost:8765/evcharge/api/login', data: creds, method: 'POST' })
+                Vue.axios.post('http://127.0.0.1:5000/evcharge/api/login?username=' + creds.name + '&password=' + creds.password)
                 .then(response => {
                     const token = response.data.token
                     const user_id = response.data.id
+                    const username = creds.name
                     localStorage.setItem('token', token)
                     localStorage.setItem('user_id', user_id)
-                    axios.defaults.headers.common['Authorization'] = token
-                    commit("login",{token:token,user_id:user_id})
+                    localStorage.setItem('username', username)
+                    commit("login",{token:token,user_id:user_id,username:username})
                     resolve(response)
                 })
                     .catch( err => {
-                      localStorage.removeItem('token')
                       reject(err)
                     })
             })
@@ -45,7 +51,8 @@ export default new Vuex.Store({
             return new Promise((resolve) =>{
               localStorage.removeItem('token')
               localStorage.removeItem('user_id')
-              delete axios.defaults.headers.common['Authorization']
+              localStorage.removeItem('username')
+              sessionStorage.clear();
               commit('logout')
               resolve()
             })
@@ -54,6 +61,7 @@ export default new Vuex.Store({
     getters: {
         user_id: state => state.user_id,
         token: state => state.token,
-        LoggedIn: state => state.LoggedIn,
+        username: state => state.username,
+        LoggedIn: state => state.LoggedIn
     }
 });

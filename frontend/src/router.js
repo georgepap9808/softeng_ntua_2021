@@ -19,41 +19,31 @@ const routes = [
     path: '/Home',
     name: 'Home',
     component: () => import('./components/Home.vue'),
-  //  meta: {
-  //    requiresAuth: true
-  //  }
   },
   {
     path: '/AddVehicle',
     name: 'AddVehicle',
     component: () => import('./components/AddVehicle.vue'),
-  //  meta: {
-  //    requiresAuth: true
-  //  }
 },
   {
     path: '/SessionsPerStation',
     name: 'SessionsPerStation',
     component: () => import('./components/SessionsPerStation.vue'),
-  //  meta: {
-  //    requiresAuth: true
-  //  }
 },
   {
     path: '/SessionsPerEV',
     name: 'SessionsPerEV',
     component: () => import('./components/SessionsPerEV.vue'),
-  //  meta: {
-  //    requiresAuth: true
-  //  }
   },
   {
     path: '/SessionsPerProvider',
     name: 'SessionsPerProvider',
     component: () => import('./components/SessionsPerProvider.vue'),
-  //  meta: {
-  //    requiresAuth: true
-  //  }
+  },
+  {
+    path: '/Myinfo',
+    name: 'Myinfo',
+    component: () => import('./components/AccountInfo.vue'),
   }
 ]
 

@@ -15,9 +15,10 @@
     "jquery": "^3.5.1",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
+    "vue-axios-qs": "^1.0.3",
     "vue-router": "^3.4.9",
-    "vuex": "^3.6.0",
-    "vuex-persistedstate": "^4.0.0-beta.2"
+    "vuex": "^3.6.2",
+    "vuex-persistedstate": "^4.0.0-beta.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

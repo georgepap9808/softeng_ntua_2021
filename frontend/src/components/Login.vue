@@ -1,6 +1,5 @@
 <template>
-    <div class="vue-tempalte">
-    <!-- Navigation -->
+  <div class="vue-template">
     <nav class="navbar shadow bg-white rounded justify-content-between flex-nowrap flex-row fixed-top">
       <div class="container">
         <a class ="navbar-brand float-left">
@@ -12,16 +11,17 @@
     <div class="vertical-center">
       <div class="inner-block">
         <form class = "login" @submit.prevent = "login">
-            <h3>Sign In</h3>
-            <div class="form-group">
-                <label> Username </label>
-                <input required v-model = "name" type="text" class="form-control form-control-lg" />
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input required v-model = "password" type="password" class="form-control form-control-lg" />
-            </div>
-            <button type="submit"
+          <h3>Sign In</h3>
+          <div class="form-group">
+            <label> Username </label>
+              <input required v-model= "name" type="text" class="form-control form-control-lg" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input required v-model = "password" type="password" class="form-control form-control-lg" />
+          </div>
+          <div v-if = "error" class = "error"> {{error}} </div>
+          <button type="submit"
             class="btn btn-dark btn-lg btn-block"> Sign In </button>
         </form>
       </div>
@@ -34,7 +34,8 @@
     data(){
       return {
         name: null,
-        password: null
+        password: null,
+        error: null
       }
     },
     methods: {
@@ -42,9 +43,13 @@
         this.$store.dispatch('login', {
                     name: this.name,
                     password: this.password,
-        }).then(() =>
-          this.$router.push('/Home'))
-        .catch(err => console.log(err))
+         }).then(() =>
+           this.$router.push('/Home'))
+         .catch(err => {
+           this.error = 'Incorrect username and/or password inserted.'
+           console.log(err)
+         }
+        )
       }
     }
 }
@@ -54,7 +59,7 @@
   body,
   html,
   .App,
-  .vue-tempalte,
+  .vue-template,
   .vertical-center {
     width: 100%;
     height: 100%;
@@ -88,6 +93,13 @@
     line-height: 1;
     padding-bottom: 20px;
   }
+  .error {
+    color : #ff0062;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
   label {
     font-weight: 500;
     font-family: 'Nunito', sans-serif;
@@ -101,7 +113,7 @@
     color: #2c3e50;
   }
   body {
-    background: #99AABB; /*!important;*/
+    background: white; /*!important;*/
     min-height: 100vh;
     display: flex;
     font-weight: 400;
