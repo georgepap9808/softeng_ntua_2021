@@ -1,0 +1,24 @@
+{
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "A CLI",
+  "main": "src/index.js",
+  "bin": {
+    "ev_group70": "bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli-client"
+  ],
+  "author": "Dimos",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "commander": "^7.1.0",
+    "esm": "^3.2.25",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0"
+  }
+}
