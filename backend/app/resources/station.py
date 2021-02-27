@@ -8,7 +8,7 @@ from marshmallow import post_dump
 
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from app.models import Station, db,ma
+from app.models import Station, db,ma,User,Session
 from app.resources.utils import custom_error, ErrorCode
 
 from app.resources.auth import requires_auth,requires_admin
@@ -72,6 +72,22 @@ class StationResource(Resource):
             return custom_error('some sql error',[str(e._message)])
 
         return {'message': 'OK'}
+
+class StationByUserResource(Resource):
+    @requires_auth
+    @use_args({    
+        'id':fields.Int(required=True)
+    },location='query')
+    def get(self, args,token,is_admin):
+        sub = Session.query.filter(Session.user_id == args['id']).all()
+        ids = list(set([s.station_id for s in sub]))
+        
+        query = Station.query.filter(Station.id.in_(list(ids) ))
+        stat = query
+        return {
+            'total':stat.count(),
+            'stations':station_schema.dump(stat.all(),many=True)
+        }
 
 #requires login from user
 class SubmitRatingResource(Resource):

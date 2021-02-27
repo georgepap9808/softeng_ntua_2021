@@ -3,7 +3,7 @@ from webargs.flaskparser import parser, abort
 from app.resources.hello import HelloWorldResource
 from app.resources.auth import LoginResource,RegisterResource,LogoutResource,GetUserDataResource
 from app.resources.vehicle import VehicleResource
-from app.resources.station import StationResource,SubmitRatingResource
+from app.resources.station import StationResource,SubmitRatingResource,StationByUserResource
 from app.resources.provider import ProviderResource
 from app.resources.helpers import HealthCheckResource,ResetSessionResource
 from app.resources.session import SessionUploadResource,SessionsPerDateResource,SessionsPerEVResource,SessionsPerProviderResource,SessionsPerStationResource
@@ -24,6 +24,7 @@ api.add_resource(GetUserDataResource,'/admin/users/<username>')
 
 api.add_resource(VehicleResource,'/vehicle')
 api.add_resource(StationResource,'/station')
+api.add_resource(StationByUserResource,'/stationByUser')
 api.add_resource(SubmitRatingResource,'/station/rating')
 
 api.add_resource(BillResource,'/bill')
@@ -35,6 +36,7 @@ api.add_resource(ResetSessionResource,'/admin/resetsessions')
 
 
 api.add_resource(SessionUploadResource, '/admin/system/sessionsupd')
+
 #to date na exei morfi 'yyyy-mm-dd' prosoxi sta 00 diladi theloume '2020-09-03' oxi  '2020-9-3'!!!!!!!!
 api.add_resource(SessionsPerDateResource,'/SessionsPerDate/<date_from>/<date_to>')
 api.add_resource(SessionsPerEVResource,'/SessionsPerEV/<date_from>/<date_to>')
