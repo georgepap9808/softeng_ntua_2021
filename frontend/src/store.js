@@ -12,7 +12,8 @@ export default new Vuex.Store({
         LoggedIn: false,
         token: "default_token",
         user_id : "",
-        username: ''
+        username: '',
+        charging_enabled: ''
     },
     mutations: {
         login(state,payload) {
@@ -20,12 +21,14 @@ export default new Vuex.Store({
             state.user_id = payload.user_id
             state.username = payload.username
             state.LoggedIn = true
+            state.charging_enabled = payload.charging_enabled
         },
         logout(state) {
             state.token = ''
             state.user_id = ''
             state.username = ''
             state.LoggedIn = false
+            state.charging_enabled = false
         }
     },
     actions: {
@@ -36,15 +39,17 @@ export default new Vuex.Store({
                     const token = response.data.token
                     const user_id = response.data.id
                     const username = creds.name
+                    const charging_enabled = creds.charging_enabled
                     localStorage.setItem('token', token)
                     localStorage.setItem('user_id', user_id)
                     localStorage.setItem('username', username)
-                    commit("login",{token:token,user_id:user_id,username:username})
+                    localStorage.setItem('charging_enabled', charging_enabled)
+                    commit("login",{token:token,user_id:user_id,username:username,charging_enabled:charging_enabled})
                     resolve(response)
                 })
-                    .catch( err => {
-                      reject(err)
-                    })
+                .catch(err => {
+                  reject(err)
+                })
             })
         },
         logout ({commit}) {
@@ -52,6 +57,7 @@ export default new Vuex.Store({
               localStorage.removeItem('token')
               localStorage.removeItem('user_id')
               localStorage.removeItem('username')
+              localStorage.removeItem('charging_enabled')
               sessionStorage.clear();
               commit('logout')
               resolve()
@@ -62,6 +68,7 @@ export default new Vuex.Store({
         user_id: state => state.user_id,
         token: state => state.token,
         username: state => state.username,
-        LoggedIn: state => state.LoggedIn
+        LoggedIn: state => state.LoggedIn,
+        charging_enabled: state => state.charging_enabled
     }
 });

@@ -20,9 +20,13 @@
             <label>Password</label>
             <input required v-model = "password" type="password" class="form-control form-control-lg" />
           </div>
+          <div>
+            <label class = "checkbox"> Check this box to enable charging mode! </label>
+            <input class = "checkbox_input" type = "checkbox" value = "true" v-model = "charging_enabled">
+          </div>
           <div v-if = "error" class = "error"> {{error}} </div>
           <button type="submit"
-            class="btn btn-dark btn-lg btn-block"> Sign In </button>
+            class="btn btn-dark btn-block"> Sign In </button>
         </form>
       </div>
     </div>
@@ -35,7 +39,8 @@
       return {
         name: null,
         password: null,
-        error: null
+        error: null,
+        charging_enabled: false
       }
     },
     methods: {
@@ -43,6 +48,7 @@
         this.$store.dispatch('login', {
                     name: this.name,
                     password: this.password,
+                    charging_enabled: this.charging_enabled
          }).then(() =>
            this.$router.push('/Home'))
          .catch(err => {
@@ -99,6 +105,12 @@
     margin-bottom: 10px;
     font-size: 0.8em;
     font-weight: bold;
+  }
+  .checkbox {
+    font-size: 14px;
+  }
+  .checkbox_input {
+    margin-left: 5px;
   }
   label {
     font-weight: 500;

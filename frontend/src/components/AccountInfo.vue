@@ -1,47 +1,55 @@
 <template>
   <div>
     <NavigationBar/>
+    <h3 class = "account_title"> Some basic information about your account: </h3>
     <div class = "account_info">
-      <p> full name:
-        {{ user.first_name }} {{ user.last_name}}
+      <p> Full Name:
+        {{ this.first_name }} {{ this.last_name}}
       </p>
-      <p> email:
-        {{ user.email }}
+      <p> Email:
+        {{ this.email }}
       </p>
-      <p> address:
-        {{ user.street }} {{ user.number }}, {{ user.city }}, {{ user.zip_code}}
+      <p> Address:
+        {{ this.street }} {{ this.number }} {{ this.city }} {{ this.zip_code}}
       </p>
     </div>
-
     <div class = "image_account"> </div>
+    <h6 class = "error_message">
+      If any piece of information is incorrect, please contact us <br>
+      via our e-mail address, evcharge-ntua@mail.com. </h6>
   </div>
 </template>
 
 <script>
 import NavigationBar from './NavigationBar.vue'
-import axios from 'axios';
-
+import Vue from 'vue';
   export default {
     components: {
       NavigationBar
     },
     data(){
       return {
-        user: {
-          email: 'nefmy99@gmail.com',
-          first_name: 'Nefeli',
-          last_name: 'Myropoulou',
-          country: 'Greece',
-          city: 'Athens',
-          street: 'Private Drive',
-          number: '4',
-          zip_code: '15351'
-        }
+        email: '',
+        first_name: '',
+        last_name: '',
+        country: '',
+        city: '',
+        street: '',
+        number: '',
+        zip_code: ''
       }
     },
     methods: {
       displayAccountInfo () {
-        axios.get('https://localhost:8765/evcharge/api/AccountInfo')
+        const headers = {
+          'Content-Type': 'text/json',
+          'X-OBSERVATORY-AUTH': this.$store.getters.token
+        }
+        Vue.axios.get('https://localhost:8765/evcharge/api/admin/users&is_admin=' + 'true' +
+        '&username=' + this.$store.getters.username,
+            {
+              headers: headers
+            })
           .then(response => {
             this.email = response.data.email,
             this.first_name = response.data.first_name,
@@ -65,11 +73,21 @@ import axios from 'axios';
     color: #2c3e50;
   }
   p {
-    font-size: 19px;
+    font-size: 18px;
+  }
+  h3 {
+    font-size: 20px;
+  }
+  .account_title {
+    font-weight: 750;
+    margin-top: 130px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
   }
   .account_info {
     border: 2px black;
-    margin-top: 200px;
+    margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -79,10 +97,14 @@ import axios from 'axios';
      width: 130px;
      height: 150px;
      background-image: url(../assets/user.png);
-     margin-top: 100px;
+     margin-top: 60px;
      margin-left: auto;
      margin-right: auto;
      background-size: 100%;
      background-repeat: no-repeat;
+  }
+  .error_message {
+    text-align: center;
+    margin-top: 135px;
   }
 </style>
