@@ -14,7 +14,7 @@ class HelloWorldResource(Resource):
     
 
     def get(self  ):  
-        """
+        
         db.session.add(User(
             username = "markakisn",
             is_admin = True, 
@@ -36,7 +36,7 @@ class HelloWorldResource(Resource):
 
 
         return {'message': 'OK'}
-        """
+        
         """
         parse = reqparse.RequestParser()
         parse.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')

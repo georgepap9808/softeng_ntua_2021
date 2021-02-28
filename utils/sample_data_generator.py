@@ -216,8 +216,8 @@ file = "backend/app.db"
 conn = create_connection(file)
 
 
-"""
-num_users = 10 
+
+num_users = 15
 
 create_admin_nikos(file)    
 
@@ -240,7 +240,7 @@ show_stations(file)
 
 create_all_providers(file)
 show_providers(file)
-"""
+
 
 #create_session(file)
 #show_sessions(file)
@@ -305,6 +305,6 @@ def create_session_2(db_file):
         print(e)    
 
 
-for i in range(100):
+for i in range(200):
     create_session_2(file)
 
