@@ -15,7 +15,7 @@ def handle_request_parsing_error(err, *_unused):
 
 
 api = Api(prefix='/evcharge/api')
-api.add_resource(HelloWorldResource, '/hello')
+#api.add_resource(HelloWorldResource, '/hello')
 
 api.add_resource(LoginResource,'/login')
 api.add_resource(LogoutResource,'/logout')
