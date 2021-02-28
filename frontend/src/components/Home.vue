@@ -2,7 +2,7 @@
   <div class = "main">
     <NavigationBar/>
     <div class = "welcome">
-      <h3> Welcome {{ displayFirstName }}! </h3>
+      <h3> Welcome {{ this.$store.getters.username }}! </h3>
     </div>
     <div class = "text">
       <h1> EV Charging <br> Management Software </h1>
@@ -22,11 +22,6 @@ import NavigationBar from './NavigationBar.vue'
   export default {
     components: {
       NavigationBar
-    },
-    computed: {
-      displayFirstName() {
-        return this.$store.getters.username;
-      }
     }
 }
 </script>

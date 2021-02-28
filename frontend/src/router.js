@@ -24,7 +24,12 @@ const routes = [
     path: '/AddVehicle',
     name: 'AddVehicle',
     component: () => import('./components/AddVehicle.vue'),
-},
+  },
+  {
+    path: '/AddCard',
+    name: 'AddCard',
+    component: () => import('./components/AddCard.vue'),
+  },
   {
     path: '/SessionsPerStation',
     name: 'SessionsPerStation',
@@ -44,6 +49,31 @@ const routes = [
     path: '/Myinfo',
     name: 'Myinfo',
     component: () => import('./components/AccountInfo.vue'),
+  },
+  {
+    path: '/Bills',
+    name: 'Bills',
+    component: () => import('./components/Bills.vue'),
+  },
+  {
+    path: '/Charge',
+    name: 'Charge',
+    component: () => import('./components/Charge.vue'),
+  },
+  {
+    path: '/Statistics',
+    name: 'Statistics',
+    component: () => import('./components/Stats.vue'),
+  },
+  {
+    path: '/Providers',
+    name: 'Providers',
+    component: () => import('./components/Providers.vue'),
+  },
+  {
+    path: '/Stations',
+    name: 'Stations',
+    component: () => import('./components/Stations.vue'),
   }
 ]
 

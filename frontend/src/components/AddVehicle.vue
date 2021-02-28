@@ -3,19 +3,21 @@
     <NavigationBar/>
     <div class="addcar_form">
       <h3> Add a new vehicle to your account: </h3>
-      <form @submit.prevent = "addVehicle">
+      <form @submit.prevent = "addVehicle()">
         <div class="form-group">
-          <label for="reg_plate">Registration Plate</label>
+          <label for="reg_plate">Registration Plate: </label>
           <input required v-model = "reg_plate" type="text" class="form-control" placeholder="Enter registration plate">
         </div>
         <div class="form-group">
-          <label for="manufacturer">Manufacturer</label>
+          <label for="manufacturer">Manufacturer: </label>
           <input required v-model = "manufacturer" type="text" class="form-control" placeholder="Enter manufacturer">
         </div>
         <div class="form-group">
-          <label for="model_info">Model Info</label>
+          <label for="model_info">Model Info: </label>
           <input required v-model = "model_info" type="text" class="form-control" placeholder="Enter model info">
         </div>
+        <div v-if = "error" class = "message"> {{ error }} </div>
+        <div v-if = "success" class = "message"> {{ success }} </div>
         <div class = "addcar_button">
           <button type="submit" class="btn btn-dark btn-block"> Add </button>
         </div>
@@ -26,7 +28,7 @@
 </template>
 
 <script>
-import qs from 'qs';
+import Vue from 'vue';
 import NavigationBar from './NavigationBar.vue'
   export default {
     components: {
@@ -34,28 +36,32 @@ import NavigationBar from './NavigationBar.vue'
     },
     data(){
       return {
-        form: {
-          reg_plate: null,
-          manufacturer: null,
-          model_info: null
-        }
+        reg_plate: null,
+        manufacturer: null,
+        model_info: null,
+        error: null,
+        success: null
       }
     },
     methods: {
-      addVehicle() {
-        this.$axios.post('/vehicle', qs.stringify(
-          {
-            reg_plate: this.form.reg_plate,
-            manufacturer: this.form.manufacturer,
-            model_info: this.form.model_info
-          }
-        )
-        ).then(() => {
-            this.$router.push('/Home')
-        }).catch(err => console.log(err))
+      addVehicle: function () {
+        const headers = {
+          'Content-Type': 'text/json',
+          'X-OBSERVATORY-AUTH': this.$store.getters.token
+        }
+        Vue.axios.post('https://127.0.0.1:5000/evcharge/api/vehicle?user_id=' + this.$store.getters.user_id
+        + '&registration_plate=' + this.reg_plate + '&manufacturer=' + this.manufacturer
+        + '&model=' + this.model_info, { headers: headers })
+         .then(() =>
+           this.success = 'New electrical vehicle successfully inserted.'
+         )
+         .catch(err => {
+           this.error = 'Something went wrong, please try again later.'
+           console.log(err)
+         })
       }
     }
-}
+  }
 </script>
 
 <style>
@@ -75,20 +81,30 @@ import NavigationBar from './NavigationBar.vue'
    width: 180px;
    height: 130px;
    background-image: url(../assets/addcar.png);
-   margin-top: 100px;
+   margin-top: 60px;
    margin-left: auto;
    margin-right: auto;
    background-size: 100%;
    background-repeat: no-repeat;
   }
+  .message {
+    color : #ff0062;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
   * {
     box-sizing: border-box;
     font-family: 'Nunito', sans-serif;
-    color: #2c3e50;
   }
   h3 {
+    font-weight: 750;
     text-align: center;
     font-size: 20px;
     margin-bottom: 20px;
+  }
+  label {
+    display: inline-block;
   }
 </style>
