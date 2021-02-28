@@ -74,7 +74,7 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
         '/' + this.date_to + '?id=' + this.$store.getters.user_id +
         '&provider_id=' + this.provider_id, {headers: headers})
         .then(response => {

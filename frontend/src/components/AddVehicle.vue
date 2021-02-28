@@ -49,7 +49,7 @@ import NavigationBar from './NavigationBar.vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.post('http://127.0.0.1:5000/evcharge/api/vehicle?user_id=' + this.$store.getters.user_id
+        Vue.axios.post('https://127.0.0.1:5000/evcharge/api/vehicle?user_id=' + this.$store.getters.user_id
         + '&registration_plate=' + this.reg_plate + '&manufacturer=' + this.manufacturer
         + '&model=' + this.model_info, { headers: headers })
          .then(() =>
@@ -97,7 +97,6 @@ import NavigationBar from './NavigationBar.vue'
   * {
     box-sizing: border-box;
     font-family: 'Nunito', sans-serif;
-    color: #2c3e50;
   }
   h3 {
     font-weight: 750;
