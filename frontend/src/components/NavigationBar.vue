@@ -1,7 +1,8 @@
 <template>
   <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand"> EV Charging System</a>
+      <a v-if = "!this.$store.getters.charging_enabled" class="navbar-brand">
+        EV Charging System </a>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item active">
@@ -58,6 +59,9 @@
 </template>
 
 <style>
+  .nav-link {
+    text-align: center;
+  }
   * {
     box-sizing: border-box;
     font-family: 'Nunito', sans-serif;
@@ -78,5 +82,8 @@
   p {
     font-size: 16px;
     text-align: center;
+  }
+  ul {
+    margin: auto;
   }
 </style>

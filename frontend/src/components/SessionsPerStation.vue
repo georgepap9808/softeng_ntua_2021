@@ -1,15 +1,22 @@
 <template>
-  <div>
+  <div class = "main-div">
     <NavigationBar/>
     <div v-if = "!this.charges_loaded">
-      <h2 class = "instructions"> Insert the id of the ev charging station that interests you: </h2>
+      <h2 class = "instructions"> <b> Choose the ev charging station and
+        time span that interest you: </b> </h2>
       <p class = "instructions_b">
         The charges loaded will only be those which took place in the selected station <br>
-        and during the selected time span. To find out the id of the charging station of your <br>
-        interest, navigate through the relevant section 'EV Charging Stations' in the 'Get Information about' subpage. </p>
-      <div class = "charges_input_box">
-        <label> Station id: </label>
-        <input class ="input-id" type = "text" v-model="station_id">
+        and during the selected time period. Only stations where you have charged at least <br>
+        once will appear as selection options. </p>
+      <div class = "select-charges">
+        <label id = "select-label"> Pick a station: </label>
+        <select v-model = "station_data">
+          <option v-for = "station in stations" :key = "station.id">
+            [{{ station.id }}]
+            {{ station.number }}, {{ station.street }},
+            {{ station.city }}, {{ station.country}}
+          </option>
+        </select>
       </div>
       <form class = "date_form" @submit.prevent = "showCharges()">
         <div class="form-group row">
@@ -24,8 +31,8 @@
             <input class="form-control" type="date" v-model="date_to">
           </div>
         </div>
-        <div v-if = "error" class = "message"> {{ error }} </div>
-        <div v-if = "no_charges" class = "message"> {{ no_charges }} </div>
+        <div v-if = "this.error" class = "message"> {{ error }} </div>
+        <div v-if = "this.no_charges" class = "message"> {{ no_charges }} </div>
         <div class = "button_dates">
           <button type="submit" class="btn btn-dark btn-block"> See Charges </button>
         </div>
@@ -34,13 +41,13 @@
     </div>
     <div v-if = "this.charges_loaded">
       <div class="show_charges">
-        <h2 class = "charges-title"> All relevant charging sessions: </h2>
-        <div class="single_charge">
+        <h2 class = "charges-title"> All of your relevant charging sessions: </h2>
+        <div class="single_charge" v-for="charge in charges" :key="charge.id">
           <ul>
-            <li v-for="charge in charges" :key="charge.id">
-              <h6 class = "h6-charges"> Starting Time: {{ charge.starting_time }} </h6>
-              <h6 class = "h6-charges"> Finishing Time: {{ charge.finishing_time }} </h6>
-              <h6 class = "h6-charges"> Total Cost: {{ charge.kwh_cost }} € </h6>
+            <li>
+              <h6> <b> Starting Time: </b> {{ charge.starting_time }} </h6>
+              <h6> <b> Finishing Time: </b> {{ charge.finishing_time }} </h6>
+              <h6> <b> Total Cost: </b> {{ charge.kwh_cost }} € </h6>
             </li>
           </ul>
         </div>
@@ -59,7 +66,8 @@ import Vue from 'vue'
     },
     data(){
       return {
-        station_id: '',
+        stations: [],
+        station_data: '',
         date_from: "2021-01-01",
         date_to: "2021-01-01",
         charges: [],
@@ -74,9 +82,10 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerStation/' + this.date_from +
+        var station_id = this.station_data.substring(1,2)
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerStation/' + this.date_from +
         '/' + this.date_to + '?id=' + this.$store.getters.user_id +
-        '&station_id=' + this.station_id, {headers: headers})
+        '&station_id=' + station_id, {headers: headers})
         .then(response => {
            if (response.data.total == 0) {
              this.no_charges = "No charges made by you in the station and time span selected."
@@ -91,6 +100,26 @@ import Vue from 'vue'
           console.log(err)
         })
       }
+    },
+    created() {
+        const headers = {
+          'Content-Type': 'text/json',
+          'X-OBSERVATORY-AUTH': this.$store.getters.token
+        }
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/stationByUser?id=' +
+        this.$store.getters.user_id, { headers: headers })
+        .then(response => {
+           if (response.data.total == 0) {
+             this.msg = "You haven't made any charges yet, no stations loaded!:("
+           }
+           else {
+             this.stations = response.data.stations
+           }
+        })
+        .catch(err => {
+          this.msg = 'Something went wrong, please try again later.'
+          console.log(err)
+        })
     }
  }
 </script>
@@ -100,25 +129,13 @@ import Vue from 'vue'
     box-sizing: border-box;
     font-family: 'Nunito', sans-serif;
   }
-  h2 {
-    font-weight: 750;
+  .main-div {
+    max-width: 1500px;
+    margin: 0 auto;
   }
   .instructions {
     text-align: center;
     margin-top: 70px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .instructions_b {
-    margin-top: 0;
-  }
-  .charges_input_box {
-    margin: 0 auto;
-    width: 50%;
-  }
-  .input-id {
-    margin-top: 10px;
-    margin-left: 9%;
   }
   .date_form {
     margin: auto;
@@ -141,10 +158,8 @@ import Vue from 'vue'
    background-size: 100%;
    background-repeat: no-repeat;
   }
-  label {
-    margin-left: 0%;
-    display: inline-block;
-    font: 1rem 'Nunito', sans-serif;
+  .select-charges {
+    margin-left: 33.5%;
   }
   .show_charges {
     max-width: 800px;
@@ -170,7 +185,7 @@ import Vue from 'vue'
    padding: 0;
    margin: 0;
   }
-  .h6-charges {
-    font-weight: bold;
+  #select-label {
+    margin-right: 10px;
   }
 </style>
