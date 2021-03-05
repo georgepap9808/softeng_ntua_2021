@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f92228596bd2
+Revision ID: 44a52cc4f10c
 Revises: 
-Create Date: 2021-01-10 11:48:11.454617
+Create Date: 2021-02-28 13:57:49.626278
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f92228596bd2'
+revision = '44a52cc4f10c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -51,6 +51,16 @@ def upgrade():
     sa.UniqueConstraint('token'),
     sa.UniqueConstraint('username')
     )
+    op.create_table('bill',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('period_start_date', sa.String(length=30), nullable=False),
+    sa.Column('period_end_date', sa.String(length=30), nullable=False),
+    sa.Column('total_cost', sa.Float(), nullable=True),
+    sa.Column('is_paid', sa.Boolean(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('card',
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('card_number', sa.String(length=16), nullable=False),
@@ -73,9 +83,10 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('station_id', sa.Integer(), nullable=True),
     sa.Column('registration_plate', sa.String(length=10), nullable=True),
-    sa.Column('starting_time', sa.Time(), nullable=False),
-    sa.Column('finishing_time', sa.Time(), nullable=False),
+    sa.Column('starting_time', sa.String(length=30), nullable=False),
+    sa.Column('finishing_time', sa.String(length=30), nullable=False),
     sa.Column('kwh_cost', sa.Float(), nullable=False),
+    sa.Column('kwh_delivered', sa.Float(), nullable=False),
     sa.Column('provider_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['provider_id'], ['provider.id'], ),
     sa.ForeignKeyConstraint(['registration_plate'], ['vehicle.registration_plate'], ),
@@ -91,6 +102,7 @@ def downgrade():
     op.drop_table('session')
     op.drop_table('vehicle')
     op.drop_table('card')
+    op.drop_table('bill')
     op.drop_table('user')
     op.drop_table('station')
     op.drop_table('provider')

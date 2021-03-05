@@ -217,8 +217,8 @@ conn = create_connection(file)
 
 
 
-num_users = 10 
-"""
+num_users = 15
+
 create_admin_nikos(file)    
 
 for i in range(num_users):
@@ -241,7 +241,6 @@ show_stations(file)
 create_all_providers(file)
 show_providers(file)
 
-"""
 
 #create_session(file)
 #show_sessions(file)
@@ -298,14 +297,14 @@ def create_session_2(db_file):
     
 #----insert session----------------------------------
     try:
-        conn.execute("INSERT INTO session(user_id, station_id, registration_plate, starting_time, finishing_time, kwh_cost, provider_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
-        (user_id, station_id,plate, starting_time, finishing_time, kwh_cost, pid))
+        conn.execute("INSERT INTO session(user_id, station_id, registration_plate, starting_time, finishing_time, kwh_cost, provider_id,kwh_delivered) VALUES(?, ?, ?, ?, ?, ?, ?,?)",
+        (user_id, station_id,plate, starting_time, finishing_time, kwh_cost, pid, round(r.uniform(0, 25), 3)))
         #print(str(user_id)+","+str(station_id)+","+str(plate)+","+str(starting_time)+","+str(finishing_time)+","+str(kwh_cost)+","+str(pid))
         conn.commit()
     except Exception as e: 
         print(e)    
 
 
-for i in range(5):
+for i in range(200):
     create_session_2(file)
 

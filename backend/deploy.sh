@@ -12,8 +12,8 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 # Set up HTTPS certificates
-openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt  \
+openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout key.pem -out cert.pem  \
 	-subj '/C=GR/ST=Attica/L=Athens/O=Ntua'
 
 # Run the server (NOT in the background, so we can kill it with a simple CTR-C) with the https certificates created above
-flask run --cert=localhost.crt --key=localhost.key 
+flask run --cert=cert.pem --key=key.pem 

@@ -27,6 +27,38 @@ def parse_datetime(s):
 def parse_date(s):
     return datetime.date(int(s[0:4]),int(s[5:7]),int(s[8:10]))
 
+class AddSingleSessionResource(Resource):
+    @requires_auth
+    @use_args({
+        'user_id': fields.Int(required=True),
+        'station_id': fields.Int(required=True),
+        'registration_plate': fields.String(required=True),
+        'starting_time': fields.String(required=True),
+        'finishing_time': fields.String(required=True),
+        'kwh_cost': fields.Float(required=True),
+        'kwh_delivered': fields.Float(required=True),
+        'provider_id': fields.Int(required=True)
+    })
+    def post(self,args,token,is_admin):
+        sess = Session(
+                user_id = args['user_id'],
+                station_id = args['station_id'],
+                registration_plate = args['registration_plate'],
+                starting_time = args['starting_time'],
+                finishing_time =args['finishing_time'] ,
+                kwh_cost = args['kwh_cost'], 
+                kwh_delivered = args['kwh_delivered'],
+                provider_id = args['provider_id']
+            )
+        db.session.add(sess)
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            return custom_error('some sql error',[str(e._message)])
+
+        return {"message":"OK"}
+
 class SessionUploadResource(Resource):
 
 
@@ -64,7 +96,8 @@ class SessionUploadResource(Resource):
                 starting_time = parse_datetime(row[3]),
                 finishing_time = parse_datetime( row[4]),
                 kwh_cost = float(row[5]), 
-                provider_id = int(row[6])
+                kwh_delivered = float(row[6]),
+                provider_id = int(row[7])
                 )
             
             try: 
@@ -89,7 +122,7 @@ class SessionSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Session
         # Fields to be included in the output
-        fields = ('id','station_id','registration_plate','user_id','starting_time','finishing_time','kwh_cost','provider_id' )
+        fields = ('id','station_id','registration_plate','user_id','starting_time','finishing_time','kwh_cost','kwh_delivered','provider_id' )
 session_schema =SessionSchema()
 
 
