@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div class = "main-div">
     <NavigationBar/>
     <div class="addcar_form">
       <h3> Add a new vehicle to your account: </h3>
       <form @submit.prevent = "addVehicle()">
         <div class="form-group">
           <label for="reg_plate">Registration Plate: </label>
-          <input required v-model = "reg_plate" type="text" class="form-control" placeholder="Enter registration plate">
+          <input required v-model = "reg_plate" type="text" class="form-control"
+          placeholder="Enter registration plate e.g. ΧΧΧ-0000" maxlength="8">
         </div>
         <div class="form-group">
           <label for="manufacturer">Manufacturer: </label>
-          <input required v-model = "manufacturer" type="text" class="form-control" placeholder="Enter manufacturer">
+          <input required v-model = "manufacturer" type="text" class="form-control"
+          placeholder="Enter manufacturer">
         </div>
         <div class="form-group">
           <label for="model_info">Model Info: </label>
@@ -19,7 +21,7 @@
         <div v-if = "error" class = "message"> {{ error }} </div>
         <div v-if = "success" class = "message"> {{ success }} </div>
         <div class = "addcar_button">
-          <button type="submit" class="btn btn-dark btn-block"> Add </button>
+          <button type="submit" class="btn btn-dark btn-block"> Add Vehicle </button>
         </div>
       </form>
       <div class = "image_addcar"> </div>
@@ -49,7 +51,7 @@ import NavigationBar from './NavigationBar.vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.post('https://127.0.0.1:5000/evcharge/api/vehicle?user_id=' + this.$store.getters.user_id
+        Vue.axios.post('http://127.0.0.1:5000/evcharge/api/vehicle?user_id=' + this.$store.getters.user_id
         + '&registration_plate=' + this.reg_plate + '&manufacturer=' + this.manufacturer
         + '&model=' + this.model_info, { headers: headers })
          .then(() =>
@@ -65,6 +67,10 @@ import NavigationBar from './NavigationBar.vue'
 </script>
 
 <style>
+  .main-div {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
   .addcar_form {
     width: 40%;
     margin-top: 100px;
