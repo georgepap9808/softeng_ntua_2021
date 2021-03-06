@@ -10,6 +10,7 @@
     <!-- Login Form -->
     <div class="vertical-center">
       <div class="inner-block">
+        <div class="login-image"> </div>
         <form class = "login" @submit.prevent = "login">
           <h3>Sign In</h3>
           <div class="form-group">
@@ -30,6 +31,7 @@
         </form>
       </div>
     </div>
+    <div class = "image"> </div>
   </div>
 </template>
 
@@ -111,6 +113,14 @@
   }
   .checkbox_input {
     margin-left: 5px;
+  }
+  .login-image {
+    width: 90px;
+    height: 80px;
+    margin-left: 250px;
+    background-image: url(../assets/login.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
   }
   label {
     font-weight: 500;

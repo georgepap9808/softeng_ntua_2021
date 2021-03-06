@@ -8,6 +8,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.js'
 
 Vue.config.productionTip = false;
 
+Vue.filter('round', function(value) {
+  return Math.round(value * 100) / 100;
+});
+
 new Vue({
   router,
   store,

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class = "main-div">
     <NavigationBar/>
     <h3 class = "account_title"> Some basic information about your account: </h3>
     <div class = "account_info">
@@ -16,7 +16,7 @@
     <div class = "image_account"> </div>
     <h6 class = "error_message">
       If any piece of information is incorrect, please contact us <br>
-      via our e-mail address, evcharge-ntua@mail.com. </h6>
+      via our e-mail address, evchargingsystem@mail.com. </h6>
   </div>
 </template>
 
@@ -78,6 +78,10 @@ import Vue from 'vue';
   h3 {
     font-size: 20px;
   }
+  .main-div {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
   .account_title {
     font-weight: 750;
     margin-top: 130px;
@@ -105,6 +109,6 @@ import Vue from 'vue';
   }
   .error_message {
     text-align: center;
-    margin-top: 135px;
+    margin-top: 160px;
   }
 </style>

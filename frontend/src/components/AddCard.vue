@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class = "main-div">
     <NavigationBar/>
     <div class="addcard_form">
       <h3> Add a new credit card to your account: </h3>
@@ -10,20 +10,20 @@
         </div>
         <div class="form-group">
           <label>  Card Number: </label>
-          <input required v-model = "card_number" type="password" class="form-control" placeholder="Enter card number">
+          <input required v-model = "card_number" type="password" class="form-control"  maxlength="16" placeholder="Enter card number">
         </div>
         <div class="form-group">
           <label> Card Expiration Date: </label>
-          <input required v-model = "card_expiration" type="date" class="form-control" placeholder="Enter expiration date">
+          <input required v-model = "card_expiration" type="month" class="form-control" placeholder="Enter expiration date">
         </div>
         <div class="form-group">
           <label for="model_info"> Security code: </label>
-          <input required v-model = "cvc_code" type="text" class="form-control" placeholder="Enter cvc code">
+          <input required v-model = "cvc_code" type="text" class="form-control" maxlength="3" placeholder="Enter cvc code">
         </div>
         <div v-if = "error" class = "message"> {{ error }} </div>
         <div v-if = "success" class = "message"> {{ success }} </div>
         <div class = "addcard_button">
-          <button type="submit" class="btn btn-dark btn-block"> Add </button>
+          <button type="submit" class="btn btn-dark btn-block"> Add Card </button>
         </div>
       </form>
       <div class = "image_addcard"> </div>
@@ -69,9 +69,13 @@ import NavigationBar from './NavigationBar.vue'
 </script>
 
 <style>
+  .main-div {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
   .addcard_form {
     width: 40%;
-    margin-top: 100px;
+    margin-top: 90px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -92,7 +96,7 @@ import NavigationBar from './NavigationBar.vue'
    width: 190px;
    height: 170px;
    background-image: url(../assets/addcard.png);
-   margin-top: 50px;
+   margin-top: 40px;
    margin-left: auto;
    margin-right: auto;
    background-size: 100%;

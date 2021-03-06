@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div class = "main-div">
     <NavigationBar/>
     <div v-if = "!this.charges_loaded">
-      <h2 class = "instructions"> Insert the id of the provider that interests you: </h2>
+      <h2 class = "instructions"> <b> Pick the energy provider and time period
+        that interest you: </b> </h2>
       <p class = "instructions-b">
-        <p class = "instructions-b">
-          The charges loaded will refer only to the selected provider and time span. <br>
-          To find out the id of the provider of your interest, navigate through the <br>
-          relevant section 'Energy Providers' in the 'Get Information about' subpage. </p>
-      <div class = "charges-input-box">
-        <label> Provider id: </label>
-        <input class ="input-id" type = "text" v-model="provider_id">
+        The charges loaded will refer only to the selected provider and time span. </p>
+      <div class = "select-charges">
+        <label id = "select-label"> Pick a provider: </label>
+        <select v-model = "provider_data">
+          <option v-for = "provider in providers" :key = "provider.id">
+            [{{ provider.id }}] {{ provider.name }}
+          </option>
+        </select>
       </div>
       <form class = "date-form" @submit.prevent = "showCharges()">
         <div class="form-group row">
@@ -35,13 +37,13 @@
     </div>
     <div v-if = "this.charges_loaded">
       <div class="show-charges">
-        <h2 class = "charges-title"> All relevant charging sessions: </h2>
-        <div class="single-charge">
+        <h2> <b> All of your relevant charging sessions: </b> </h2>
+        <div class="single-charge" v-for="charge in charges" :key="charge.id">
           <ul>
-            <li v-for="charge in charges" :key="charge.id">
-              <h6 class = "h6-charges"> Starting Time: {{ charge.starting_time }} </h6>
-              <h6 class = "h6-charges"> Finishing Time: {{ charge.finishing_time }} </h6>
-              <h6 class = "h6-charges"> Total Cost: {{ charge.kwh_cost }} € </h6>
+            <li>
+              <h6> <b> Starting Time: </b> {{ charge.starting_time }} </h6>
+              <h6> <b> Finishing Time: </b> {{ charge.finishing_time }} </h6>
+              <h6> <b> Total Cost: </b> {{ charge.kwh_cost }} € </h6>
             </li>
           </ul>
         </div>
@@ -60,9 +62,11 @@ import Vue from 'vue'
     },
     data(){
       return {
-        provider_id: '',
+        providers: [],
+        provider_data: '',
         date_from: "2021-01-01",
         date_to: "2021-01-01",
+        charges: [],
         charges_loaded: false,
         error: '',
         no_charges: ''
@@ -74,9 +78,10 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
+        var provider_id = this.provider_data.substring(1,2)
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
         '/' + this.date_to + '?id=' + this.$store.getters.user_id +
-        '&provider_id=' + this.provider_id, {headers: headers})
+        '&provider_id=' + provider_id, {headers: headers})
         .then(response => {
            if (response.data.total == 0) {
              this.no_charges = "No charges made by you in the station and time span selected."
@@ -91,6 +96,21 @@ import Vue from 'vue'
           console.log(err)
         })
       }
+    },
+    created() {
+        const headers = {
+          'Content-Type': 'text/json',
+          'X-OBSERVATORY-AUTH': this.$store.getters.token
+        }
+        // most probably providerbyUser
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/providers', { headers: headers })
+        .then(response => {
+          this.providers = response.data.providers
+        })
+        .catch(err => {
+          this.error = 'Something went wrong, please try again later.'
+          console.log(err)
+        })
     }
   }
 </script>
@@ -99,38 +119,22 @@ import Vue from 'vue'
   * {
     box-sizing: border-box;
     font-family: 'Nunito', sans-serif;
-    color: #2c3e50;
   }
-  h2 {
-    font-weight: 750;
+  .main-div {
+    max-width: 1500px;
+    margin: 0 auto;
   }
   .instructions {
     text-align: center;
     margin-top: 70px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .instructions-b {
-    margin-top: 0;
-  }
-  .charges-input-box {
-    margin: 0 auto;
-    width: 50%;
-  }
-  .input-id {
-    margin-top: 10px;
-    margin-left: 8%;
   }
   .date-form {
-    margin: auto;
+    margin: 15px auto;
     width: 50%;
-    margin-top: 15px;
   }
   .button-dates {
     width: 20%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
+    margin: 50px auto;
   }
   .image-adddate {
    width: 260px;
@@ -141,11 +145,6 @@ import Vue from 'vue'
    margin-right: auto;
    background-size: 100%;
    background-repeat: no-repeat;
-  }
-  label {
-    margin-left: 0%;
-    display: inline-block;
-    font: 1rem 'Nunito', sans-serif;
   }
   .show-charges {
     max-width: 800px;
@@ -166,12 +165,15 @@ import Vue from 'vue'
   .charges-title {
     margin-top: 30px;
   }
+  .select-charges {
+    margin-left: 33.5%;
+  }
   ul {
    list-style-type: none;
    padding: 0;
    margin: 0;
   }
-  .h6-charges {
-    font-weight: bold;
+  #select-label {
+    margin-right: 10px;
   }
 </style>

@@ -1,22 +1,40 @@
 <template>
-  <div>
+  <div class = "main-div">
     <NavigationBar/>
-    <h2 v-if = "!this.msg" class = "stations-vue">
-      EV charging stations where you
-      have charged your electrical vehicle(s):  </h2>
     <div class = "show-stations" v-if = "!this.msg">
-      <div class="single-station">
+      <h2 v-if = "!this.msg" class = "h2-stations">
+        EV charging stations where you
+        have charged your electrical vehicle(s):  </h2>
+      <div v-if = "(!this.success)" class = "rate-station">
+        <label> Choose a station to rate: </label>
+        <select v-model = "station_data" class = "rate-select">
+          <option v-for = "station in stations" :key = "station.id">
+            [{{ station.id }}]
+            {{ station.number }}, {{ station.street }},
+            {{ station.city }}, {{ station.country}}
+          </option>
+        </select>
+        <label class = "label_2"> add and submit your rating: </label>
+        <input required v-model = "rating" type = "number" min = "1" max = "5">
+      </div>
+      <button v-if = "(!this.success)" class="btn btn-dark btn-sm"
+        id = "rate-button" v-on:click="rate"> submit rating
+      </button>
+      <div v-if = "this.success" class = "msg"> {{ success }} </div>
+      <div class="single-station" v-for="station in stations" :key="station.id">
         <ul>
-          <li v-for="station in stations" :key="station.id">
-            <h6> Station id:  {{ this.station.id  }}  </h6>
-            <h6> Address: {{ this.station_number }}, {{ this.station_street}},
-            {{ this.station.city }}, {{ this.station.country}}. </h6>
-            <h6> Station's average rating: {{ station_avg_rating }}.
-            {{ this.station_num_ratings }} users have rated this station. </h6>
+          <li>
+            <h6> Station id:  {{ station.id  }}  </h6>
+            <h6> <b> Location: </b> {{ station.number }}, {{ station.street }},
+            {{ station.city }}, {{ station.country}}. </h6>
+            <h6> This station's <b> average rating </b>
+              is {{ station.avg_rating | round }} / 5.
+            </h6>
+            <h6> This station has been rated {{ station.num_ratings }} times. </h6>
           </li>
         </ul>
       </div>
-    <div v-if = "this.msg"> {{ this.msg }} </div>
+    </div>
   </div>
 </template>
 
@@ -31,14 +49,28 @@ import Vue from 'vue'
     data(){
       return {
         stations: [],
-        station_id: '',
-        station_number: '',
-        station_street: '',
-        station_city: '',
-        station_country: '',
-        station_avg_rating: '',
-        station_num_ratings: '',
-        msg: ''
+        station_data: '',
+        rating: '',
+        success: '',
+        error: ''
+      }
+    },
+    methods: {
+      rate: function() {
+        const headers = {
+          'Content-Type': 'text/json',
+          'X-OBSERVATORY-AUTH': this.$store.getters.token
+        }
+        var id = this.station_data.substring(1,2)
+        Vue.axios.post('http://127.0.0.1:5000/evcharge/api/station/rating?id=' +
+        id + '&rating=' + this.rating, { headers: headers })
+        .then(() => {
+          this.success = "Rating successfully submitted."
+        })
+        .catch(err => {
+          this.error = 'Something went wrong, please try again later.'
+          console.log(err)
+        })
       }
     },
     created() {
@@ -46,11 +78,11 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/stationByUser&id=' +
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/stationByUser?id=' +
         this.$store.getters.user_id, { headers: headers })
         .then(response => {
            if (response.data.total == 0) {
-             this.msg = "You haven't made any charges yet, so no stations were loaded!:("
+             this.msg = "You haven't made any charges yet, no stations loaded!:("
            }
            else {
              this.stations = response.data.stations
@@ -69,10 +101,9 @@ import Vue from 'vue'
     box-sizing: border-box;
     font-family: 'Nunito', sans-serif;
   }
-  .stations_vue {
-    text-align: center;
-    margin-top: 20px;
-    font-weight: bold;
+  .main-div {
+    max-width: 1500px;
+    margin: 0 auto;
   }
   .show-stations {
     max-width: 800px;
@@ -82,12 +113,35 @@ import Vue from 'vue'
     padding: 20px;
     margin: 20px 0;
     box-sizing: border-box;
-    background: #d49157; /* light orange */
+    background: #EACDC2;
   }
   .msg {
     color : #ff0062;
     text-align: center;
     font-size: 0.8em;
     font-weight: bold;
+  }
+  .h2-stations {
+    margin-top: 30px;
+    font-weight: bold;
+  }
+  ul {
+   list-style-type: none;
+   padding: 0;
+   margin: 0;
+  }
+  select {
+    margin-left: 15px;
+  }
+  .rate-station {
+    margin: 20px 0;
+    padding-top: 20px;
+  }
+  .label_2 {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  #rate-button {
+    margin-left: 42%;
   }
 </style>

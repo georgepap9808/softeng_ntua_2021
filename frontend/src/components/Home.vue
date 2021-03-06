@@ -1,17 +1,24 @@
 <template>
-  <div class = "main">
+  <div class = "main-div">
     <NavigationBar/>
     <div class = "welcome">
-      <h3> Welcome {{ this.$store.getters.username }}! </h3>
+      <h3> <b> Welcome {{ this.$store.getters.username }}! </b> </h3>
     </div>
     <div class = "text">
       <h1> EV Charging <br> Management Software </h1>
       <h2> Lets you track,
         manage and optimize electrical
         vehicle charging. </h2>
+        <p id = "home-paragraph">
+          Enrich your experience as an electrical vehicle driver
+          by using a charging management  software which enables
+          you to manage, monitor and improve your ev charges.
+          Εasily <br> pay your charging bills, supervise your charging
+          sessions and gain access to providers <br> and stations information.
+        </p>
      </div>
      <div class = "image"> </div>
-     <div class = "project">
+     <div>
        <p> A project for Software Engineering, NTUA 2021 </p>
      </div>
   </div>
@@ -42,12 +49,17 @@ import NavigationBar from './NavigationBar.vue'
     text-align: left;
     margin-bottom: 30px;
   }
-  h3 {
-    font-weight: 1000;
+  #home-paragraph {
+    text-align: left;
+    font-size: 18px;
   }
   p {
     font-size: 16px;
     text-align: center;
+  }
+  .main-div {
+    max-width: 1500px;
+    margin: 0 auto;
   }
   .welcome {
     padding-top: 120px;
@@ -61,8 +73,8 @@ import NavigationBar from './NavigationBar.vue'
     width: 50%;
   }
   .image {
-    width: 500px;
-    height: 400px;
+    width: 600px;
+    height: 260px;
     background-image: url(../assets/car.png);
     margin: auto;
     background-size: 100%;
