@@ -3,11 +3,12 @@ from webargs.flaskparser import parser, abort
 from app.resources.hello import HelloWorldResource
 from app.resources.auth import LoginResource,RegisterResource,LogoutResource,GetUserDataResource
 from app.resources.vehicle import VehicleResource
-from app.resources.station import StationResource,SubmitRatingResource,StationByUserResource
-from app.resources.provider import ProviderResource
+from app.resources.station import StationResource,SubmitRatingResource,StationByUserResource,AllStationsResource
+from app.resources.provider import ProviderResource,AllProvidersResource,ProviderByUserResource
 from app.resources.helpers import HealthCheckResource,ResetSessionResource
 from app.resources.session import SessionUploadResource,SessionsPerDateResource,SessionsPerEVResource,SessionsPerProviderResource,SessionsPerStationResource,AddSingleSessionResource
 from app.resources.bill import BillResource
+from app.resources.card import CardResource
 
 @parser.error_handler
 def handle_request_parsing_error(err, *_unused):
@@ -26,10 +27,16 @@ api.add_resource(VehicleResource,'/vehicle')
 api.add_resource(StationResource,'/station')
 api.add_resource(StationByUserResource,'/stationByUser')
 api.add_resource(SubmitRatingResource,'/station/rating')
+api.add_resource(AllStationsResource,'/allStations')
 
 api.add_resource(BillResource,'/bill')
 
+
+api.add_resource(CardResource,'/card')
+
 api.add_resource(ProviderResource,'/provider')
+api.add_resource(AllProvidersResource,'/allProviders')
+api.add_resource(ProviderByUserResource,'/providerByUser')
 
 api.add_resource(HealthCheckResource,'/admin/healthcheck')
 api.add_resource(ResetSessionResource,'/admin/resetsessions')

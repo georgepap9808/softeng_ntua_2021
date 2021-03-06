@@ -17,3 +17,4 @@ openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout key.pem -out
 
 # Run the server (NOT in the background, so we can kill it with a simple CTR-C) with the https certificates created above
 flask run --cert=cert.pem --key=key.pem 
+$SHELL

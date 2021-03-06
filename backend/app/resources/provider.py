@@ -8,7 +8,7 @@ from marshmallow import post_dump
 
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from app.models import Provider, db,ma
+from app.models import Provider, db,ma,Session
 from app.resources.utils import custom_error, ErrorCode
 
 from app.resources.auth import requires_auth,requires_admin
@@ -23,6 +23,35 @@ class ProviderSchema(ma.SQLAlchemyAutoSchema):
         fields = ('id', 'name', 'kwh_cost')
 
 provider_schema = ProviderSchema()
+
+class AllProvidersResource(Resource):
+    @requires_auth
+    def get(self,token,is_admin):
+        query = Provider.query
+        res = query
+        total = res.count()
+
+        return{
+            "total":total,
+            "providers":provider_schema.dump(res.all(),many=True)
+        }
+
+
+class ProviderByUserResource(Resource):
+    @requires_auth
+    @use_args({    
+        'id':fields.Int(required=True)
+    },location='query')
+    def get(self, args,token,is_admin):
+        sub = Session.query.filter(Session.user_id == args['id']).all()
+        ids = list(set([s.provider_id for s in sub]))
+        
+        query = Provider.query.filter(Provider.id.in_(list(ids) ))
+        stat = query
+        return {
+            'total':stat.count(),
+            'providers':provider_schema.dump(stat.all(),many=True)
+        }
 
 class ProviderResource(Resource):
     @requires_admin
