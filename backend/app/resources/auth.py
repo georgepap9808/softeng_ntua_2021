@@ -87,7 +87,7 @@ class LoginResource(Resource):
 
 
 class GetUserDataResource(Resource):
-    @requires_admin
+    @requires_auth
     def get(self,token,is_admin,username):
         try:
             u = User.query.filter(User.username == username).first()

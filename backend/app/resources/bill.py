@@ -40,12 +40,12 @@ def update_bills(user_id):
     con = engine.connect()
     rs = con.execute("select sum( (CAST( substr(finishing_time,12,2) AS INTEGER)-CAST(substr(starting_time,12,2) AS INTEGER))*kwh_cost ) as cost ,substr(starting_time,0,8) as month  from session where user_id = ?  and substr(starting_time,0,8)>? group by substr(starting_time,0,8) ;",(user_id,last_bill_date))
     '''
-    rs = db.session.query( func.sum((func.substr(Session.finishing_time,12,2).cast(db.Integer)-func.substr(Session.starting_time,12,2).cast(db.Integer))*Session.kwh_cost),func.substr(Session.starting_time,0,8)).group_by(func.substr(Session.starting_time,0,8)).filter(Session.user_id == user_id,Session.starting_time>last_bill_date)
+    rs = db.session.query( func.sum(Session.kwh_delivered*Session.kwh_cost),func.substr(Session.starting_time,0,8)).group_by(func.substr(Session.starting_time,0,8)).filter(Session.user_id == user_id,Session.starting_time>last_bill_date)
 
 
 
     for r in rs:
-        print(r[0],r[1])
+        #print(r[0],r[1])
     
         b = Bill(
             user_id = user_id, 
