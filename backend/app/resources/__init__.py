@@ -4,7 +4,7 @@ from app.resources.hello import HelloWorldResource
 from app.resources.auth import LoginResource,RegisterResource,LogoutResource,GetUserDataResource
 from app.resources.vehicle import VehicleResource
 from app.resources.station import StationResource,SubmitRatingResource,StationByUserResource
-from app.resources.provider import ProviderResource
+from app.resources.provider import ProviderResource,AllProvidersResource
 from app.resources.helpers import HealthCheckResource,ResetSessionResource
 from app.resources.session import SessionUploadResource,SessionsPerDateResource,SessionsPerEVResource,SessionsPerProviderResource,SessionsPerStationResource,AddSingleSessionResource
 from app.resources.bill import BillResource
@@ -30,6 +30,7 @@ api.add_resource(SubmitRatingResource,'/station/rating')
 api.add_resource(BillResource,'/bill')
 
 api.add_resource(ProviderResource,'/provider')
+api.add_resource(AllProvidersResource,'/allProviders')
 
 api.add_resource(HealthCheckResource,'/admin/healthcheck')
 api.add_resource(ResetSessionResource,'/admin/resetsessions')

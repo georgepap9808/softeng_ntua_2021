@@ -24,6 +24,18 @@ class ProviderSchema(ma.SQLAlchemyAutoSchema):
 
 provider_schema = ProviderSchema()
 
+class AllProvidersResource(Resource):
+    @requires_auth
+    def get(self,token,is_admin):
+        query = Provider.query
+        res = query
+        total = res.count()
+
+        return{
+            "total":total,
+            "sessions":provider_schema.dump(res.all(),many=True)
+        }
+
 class ProviderResource(Resource):
     @requires_admin
     @use_args({
