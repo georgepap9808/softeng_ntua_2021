@@ -1,3 +1,4 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const program = require('commander');
 const axios = require('axios');
 const https = require('https');
@@ -5,10 +6,11 @@ const fs = require('fs');
 
 const base_url = 'https://127.0.0.1:5000/evcharge/api'		//'https://localhost:8765/evcharge/api';
 const agent = new https.Agent({
-	rejectUnauthorized: false,
+    rejectUnauthorized: false, // (NOTE: this will disable client verification)
+    cert: fs.readFileSync("./src/cli.crt"),
+    key: fs.readFileSync("./src/cli.key"),
 });
 
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 export function cli(args) {
 
@@ -17,7 +19,7 @@ export function cli(args) {
 		.requiredOption('--username <value>', 'User\'s username')
 		.requiredOption('--passw <value>', 'User\'s password')
 		.action(function (command) {
-			axios.post(`${base_url}/login?username=${command.username}?password=${command.passw}`,
+			axios.post(`${base_url}/login?username=${command.username}&password=${command.passw}`,
 				{ httpsAgent: agent })
 				.then(function (response) {
 					fs.writeFile('/tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
