@@ -75,7 +75,7 @@ import NavigationBar from './NavigationBar.vue'
   }
   .addcard_form {
     width: 40%;
-    margin-top: 90px;
+    margin-top: 40px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -83,7 +83,7 @@ import NavigationBar from './NavigationBar.vue'
     width: 20%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 30px;
+    margin-top: 20px;
   }
   .message {
     color : #ff0062;
@@ -93,10 +93,10 @@ import NavigationBar from './NavigationBar.vue'
     font-weight: bold;
   }
   .image_addcard {
-   width: 190px;
-   height: 170px;
+   width: 250px;
+   height: 240px;
    background-image: url(../assets/addcard.png);
-   margin-top: 40px;
+   margin-top: 20px;
    margin-left: auto;
    margin-right: auto;
    background-size: 100%;

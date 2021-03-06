@@ -19,7 +19,9 @@
      </div>
      <div class = "image"> </div>
      <div>
-       <p> A project for Software Engineering, NTUA 2021 </p>
+       <p>
+         All pictures are credited to their rightful owners. <br>
+         A project for Software Engineering, NTUA 2021 </p>
      </div>
   </div>
 </template>
@@ -54,7 +56,7 @@ import NavigationBar from './NavigationBar.vue'
     font-size: 18px;
   }
   p {
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
   }
   .main-div {

@@ -116,7 +116,7 @@ import Vue from 'vue'
     background: #EACDC2;
   }
   .msg {
-    color : #ff0062;
+    color : #16b800;
     text-align: center;
     font-size: 0.8em;
     font-weight: bold;

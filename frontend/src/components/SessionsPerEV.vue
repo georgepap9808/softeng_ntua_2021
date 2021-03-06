@@ -10,18 +10,18 @@
         <p> The charges loaded will refer only to the selected vehicle and time span. </p>
       </div>
       <div class = "charges_input_box">
-        <label> Registration Plate: </label>
+        <label> <b> Registration Plate: </b> </label>
         <input class = "input-id" maxlength="8" type="text" v-model="reg_p">
       </div>
       <form class = "date_form" @submit.prevent = "showCharges()">
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label">Start Date :</label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> Start Date: </b> </label>
           <div class="col-10">
             <input class="form-control" type="date" v-model = "date_from">
           </div>
         </div>
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label">End Date :</label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> End Date: </b> </label>
           <div class="col-10">
             <input class="form-control" type="date" v-model = "date_to">
           </div>
@@ -111,7 +111,7 @@ import Vue from 'vue'
     margin-right: auto;
   }
   .charges_input_box {
-    margin-left: 33.5%;
+    margin-left: 25%;
     width: 50%;
   }
   .input-id {
@@ -130,10 +130,10 @@ import Vue from 'vue'
     margin-top: 50px;
   }
   .image_adddate {
-   width: 310px;
-   height: 270px;
+   width: 270px;
+   height: 275px;
    background-image: url(../assets/adddates1.png);
-   margin-top: 40px;
+   margin-top: 20px;
    margin-left: auto;
    margin-right: auto;
    background-size: 100%;

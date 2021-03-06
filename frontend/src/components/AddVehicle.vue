@@ -73,7 +73,7 @@ import NavigationBar from './NavigationBar.vue'
   }
   .addcar_form {
     width: 40%;
-    margin-top: 100px;
+    margin-top: 80px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -81,13 +81,13 @@ import NavigationBar from './NavigationBar.vue'
     width: 20%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 30px;
+    margin-top: 20px;
   }
   .image_addcar {
-   width: 180px;
-   height: 130px;
+   width: 250px;
+   height: 240px;
    background-image: url(../assets/addcar.png);
-   margin-top: 60px;
+   margin-top: 40px;
    margin-left: auto;
    margin-right: auto;
    background-size: 100%;

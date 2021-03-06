@@ -15,6 +15,8 @@
         <label class = "checkbox"> Show me only the bills I haven't paid yet. </label>
         <input class = "checkbox_input" type = "checkbox" value = "true" v-model = "only_unpaid">
       </div>
+      <div v-if = "error" class = "error"> {{ error }} </div>
+      <div v-if = "success" class = "success"> {{ success }} </div>
       <div v-if = "!show_more">
         <div class="single-bill" v-for="bill in bills" :key="bill.id">
           <ul>
@@ -25,7 +27,7 @@
               </div>
               <h6> <b> Starting Time: </b> {{ bill.period_start_date }} </h6>
               <h6> <b> Finishing Time: </b> {{ bill.period_end_date}} </h6>
-              <h6> <b> Total Cost </b> for this month was: {{ bill.total_cost }}€ </h6>
+              <h6> <b> Total Cost </b> for this month was: {{ bill.total_cost | round }}€ </h6>
               <h6 class = "msg-payment" v-if = "bill.is_paid"> This bill has already been paid! </h6>
               <div v-if = "(!bill.is_paid)&(!success)" class = "pay-bill">
                 <button v-on:click="pay(bill.id)"
@@ -33,8 +35,6 @@
               </div>
             </li>
           </ul>
-          <div v-if = "error" class = "message"> {{ error }} </div>
-          <div v-if = "success" class = "message"> {{ success }} </div>
         </div>
       </div>
     </div>
@@ -135,8 +135,14 @@ import Vue from 'vue'
     box-sizing: border-box;
     background: #DBF4AD;
   }
-  .message {
+  .error {
     color : #ff0062;
+    text-align: center;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+  .success {
+    color : #16b800;
     text-align: center;
     font-size: 0.8em;
     font-weight: bold;

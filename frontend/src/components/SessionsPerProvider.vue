@@ -7,7 +7,7 @@
       <p class = "instructions-b">
         The charges loaded will refer only to the selected provider and time span. </p>
       <div class = "select-charges">
-        <label id = "select-label"> Pick a provider: </label>
+        <label id = "select-label"> <b> Pick a provider: </b> </label>
         <select v-model = "provider_data">
           <option v-for = "provider in providers" :key = "provider.id">
             [{{ provider.id }}] {{ provider.name }}
@@ -16,13 +16,13 @@
       </div>
       <form class = "date-form" @submit.prevent = "showCharges()">
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label">Start Date:</label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> Start Date: </b> </label>
           <div class="col-10">
             <input class="form-control" type="date" v-model = "date_from">
           </div>
         </div>
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label">End Date:</label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> End Date: </b></label>
           <div class="col-10">
             <input class="form-control" type="date" v-model = "date_to">
           </div>
@@ -137,8 +137,8 @@ import Vue from 'vue'
     margin: 50px auto;
   }
   .image-adddate {
-   width: 260px;
-   height: 240px;
+   width: 280px;
+   height: 260px;
    background-image: url(../assets/adddates2.png);
    margin-top: 40px;
    margin-left: auto;
@@ -166,7 +166,7 @@ import Vue from 'vue'
     margin-top: 30px;
   }
   .select-charges {
-    margin-left: 33.5%;
+    margin-left: 25%;
   }
   ul {
    list-style-type: none;
@@ -174,6 +174,6 @@ import Vue from 'vue'
    margin: 0;
   }
   #select-label {
-    margin-right: 10px;
+    margin-right: 34px;
   }
 </style>
