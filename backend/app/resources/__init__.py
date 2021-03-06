@@ -3,7 +3,7 @@ from webargs.flaskparser import parser, abort
 from app.resources.hello import HelloWorldResource
 from app.resources.auth import LoginResource,RegisterResource,LogoutResource,GetUserDataResource
 from app.resources.vehicle import VehicleResource
-from app.resources.station import StationResource,SubmitRatingResource,StationByUserResource
+from app.resources.station import StationResource,SubmitRatingResource,StationByUserResource,AllStationsResource
 from app.resources.provider import ProviderResource,AllProvidersResource,ProviderByUserResource
 from app.resources.helpers import HealthCheckResource,ResetSessionResource
 from app.resources.session import SessionUploadResource,SessionsPerDateResource,SessionsPerEVResource,SessionsPerProviderResource,SessionsPerStationResource,AddSingleSessionResource
@@ -26,6 +26,7 @@ api.add_resource(VehicleResource,'/vehicle')
 api.add_resource(StationResource,'/station')
 api.add_resource(StationByUserResource,'/stationByUser')
 api.add_resource(SubmitRatingResource,'/station/rating')
+api.add_resource(AllStationsResource,'/allStations')
 
 api.add_resource(BillResource,'/bill')
 

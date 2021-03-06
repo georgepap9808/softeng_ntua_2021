@@ -24,6 +24,20 @@ class StationSchema(ma.SQLAlchemyAutoSchema):
 
 station_schema = StationSchema()
 
+
+class AllStationsResource(Resource):
+    @requires_auth
+    def get(self,token,is_admin):
+        query = Station.query
+        res = query
+        total = res.count()
+
+        return{
+            "total":total,
+            "stations":station_schema.dump(res.all(),many=True)
+        }
+
+
 class StationResource(Resource):
     @requires_admin
     @use_args({
