@@ -114,7 +114,7 @@ class SubmitRatingResource(Resource):
         stat = Station.query.filter(Station.id == args['id']).first()
         n = stat.num_ratings 
         avg = 0 if stat.avg_rating == None else stat.avg_rating
-        new_rating = (n* + args['rating'])/(n+1)
+        new_rating = (n*avg + args['rating'])/(n+1)
         stat.avg_rating = new_rating 
         stat.num_ratings = n +1 
 
