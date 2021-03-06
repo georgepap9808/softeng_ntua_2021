@@ -8,6 +8,7 @@ from app.resources.provider import ProviderResource,AllProvidersResource,Provide
 from app.resources.helpers import HealthCheckResource,ResetSessionResource
 from app.resources.session import SessionUploadResource,SessionsPerDateResource,SessionsPerEVResource,SessionsPerProviderResource,SessionsPerStationResource,AddSingleSessionResource
 from app.resources.bill import BillResource
+from app.resources.card import CardResource
 
 @parser.error_handler
 def handle_request_parsing_error(err, *_unused):
@@ -29,6 +30,9 @@ api.add_resource(SubmitRatingResource,'/station/rating')
 api.add_resource(AllStationsResource,'/allStations')
 
 api.add_resource(BillResource,'/bill')
+
+
+api.add_resource(CardResource,'/card')
 
 api.add_resource(ProviderResource,'/provider')
 api.add_resource(AllProvidersResource,'/allProviders')
