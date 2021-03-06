@@ -1,26 +1,26 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const program = require('commander');
 const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
 
-const base_url = 'https://localhost:8765/evcharge/api';
+const base_url = 'https://127.0.0.1:5000/evcharge/api'		//'https://localhost:8765/evcharge/api';
 const agent = new https.Agent({
-	rejectUnauthorized: false,
+    rejectUnauthorized: false, // (NOTE: this will disable client verification)
+    cert: fs.readFileSync("./src/cli.crt"),
+    key: fs.readFileSync("./src/cli.key"),
 });
+
 
 export function cli(args) {
 
     program
 		.command('login')
-		//.option('--format <value>', 'Insert format, json or csv', 'json')
-        //.option('--apikey <value>')
 		.requiredOption('--username <value>', 'User\'s username')
 		.requiredOption('--passw <value>', 'User\'s password')
 		.action(function (command) {
-			axios.post(`${base_url}/login?format=${command.format}?apikey=${command.apikey}`, {
-					username: command.username,
-					password: command.passw
-				}, { httpsAgent: agent })
+			axios.post(`${base_url}/login?username=${command.username}&password=${command.passw}`,
+				{ httpsAgent: agent })
 				.then(function (response) {
 					fs.writeFile('/tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
 						if(err) {
@@ -30,36 +30,32 @@ export function cli(args) {
 					});
 				})
 				.catch(function (error) {
-					console.log('Login failed: ', error.response.data.error);
+					console.log('Login failed: ', error);	//response.data.error
 				});
 		});
     
     program
 		.command('logout')
-        //.option('--format <value>', 'Insert format, json or csv', 'json')
-        //.option('--apikey <value>')
 		.action(function (command) {
-			axios.post(`${base_url}/logout?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent })
+			axios.post(`${base_url}/logout`, { httpsAgent: agent })
 				.then(function (response) {
 					// handle success
 					console.log(response.data);
+					fs.unlink('tmp\/softeng20bAPI.token', function(err) {
+						if(err) {
+							return console.log('Removing token failed:', err);
+						}
+						console.log('Logout successful. Token removed');
+					});
 				})
 				.catch(function (error) {
 					// handle error
-					console.log('{ status: \'error\' }');
+					console.log('Logout failed: ', error);
 				})
-            fs.unlink('/tmp/softeng20bAPI.token', function(err) {
-				if(err) {
-					return console.log('Removing token failed:', err);
-				}
-				console.log('Logout successful. Token removed');
-			});
 		});
 
 	program
 		.command('SessionsPerPoint')
-		//.option('--format <value>', 'Insert format, json or csv', 'json')
-        //.option('--apikey <value>')
 		.requiredOption('--point <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -69,22 +65,20 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerPoint/${command.point}/${command.datefrom}/${command.dateto}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerPoint?point=${command.point}?datefrom=${command.datefrom}?dateto=${command.dateto}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('{ status: \'error\' }');
+						console.log('SessionsPerPoint failed: ', error);
 					})
 			})
 		});
 
     program
 		.command('SessionsPerStation')
-		//.option('--format <value>', 'Insert format, json or csv', 'json')
-        //.option('--apikey <value>')
 		.requiredOption('--station <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -94,22 +88,20 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerStation/${command.station}/${command.datefrom}/${command.dateto}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerStation?station=${command.station}?datefrom=${command.datefrom}?dateto=${command.dateto}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('{ status: \'error\' }');
+						console.log('SessionsPerStation failed: ', error);
 					})
 			})
 		});
 
     program
 		.command('SessionsPerEV')
-		//.option('--format <value>', 'Insert format, json or csv', 'json')
-        //.option('--apikey <value>')
 		.requiredOption('--ev <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -119,22 +111,20 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerEV/${command.ev}/${command.datefrom}/${command.dateto}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerEV?ev=${command.ev}?datefrom=${command.datefrom}?dateto=${command.dateto}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('{ status: \'error\' }');
+						console.log('SessionsPerEV failed: ', error);
 					})
 			})
 		});
 
     program
 		.command('SessionsPerProvider')
-		//.option('--format <value>', 'Insert format, json or csv', 'json')
-        //.option('--apikey <value>')
 		.requiredOption('--provider <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -144,7 +134,7 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerProvider/${command.provider}/${command.datefrom}/${command.dateto}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerProvider?provider=${command.provider}?datefrom=${command.datefrom}?dateto=${command.dateto}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
@@ -156,13 +146,8 @@ export function cli(args) {
 			})
 		});
 
-
-    //username alphanumeric
-    //passw no spaces
 	program
 		.command('Admin')
-		//.option('--format <value>', 'Insert format, json or csv', 'json')
-        //.option('--apikey <value>')
 		.option('--username <value>', 'User\'s username')
         .option('--passw <value>', 'User\'s password')
 		.option('--users <value>')
@@ -177,10 +162,10 @@ export function cli(args) {
 				}
 				const token = JSON.parse(data).token;
 				if (command.usermod && command.username && command.passw){
-                    axios.post(`${base_url}/admin/usermod/:${command.username}/:${command.passw}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+                    axios.post(`${base_url}/admin/usermod?username=${command.username}?password=${command.passw}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
                         .then(function (response) {
                             // handle success
-                            console.log(command.apikey);
+                            console.log('Usermod success');
                         })
                         .catch(function (error) {
                             // handle error
@@ -191,11 +176,10 @@ export function cli(args) {
 					console.log('username and password are required to modify user');
 				}
 				if(command.users){
-                    axios.get(`${base_url}/admin/users/:${command.username}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+                    axios.get(`${base_url}/admin/users?username=${command.username}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
                         .then(function (response) {
                             // handle success
                             console.log(command.username);
-							console.log(command.apikey);
                         })
                         .catch(function (error) {
                             // handle error
@@ -203,7 +187,7 @@ export function cli(args) {
                         })
                 }
                 else if(command.sessionsupd && command.source){
-					axios.post(`${base_url}/admin/system/sessionsupd/${command.source}?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					axios.post(`${base_url}/admin/system/sessionsupd?source${command.source}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
@@ -217,7 +201,7 @@ export function cli(args) {
 					console.log('source option is required for sessionsupd');
 				}
 				else if(command.healthcheck){
-					axios.get(`${base_url}/admin/healthcheck?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					axios.get(`${base_url}/admin/healthcheck`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
@@ -228,7 +212,7 @@ export function cli(args) {
 					})
 				}
 				else if(command.resetsessions){
-					axios.post(`${base_url}/admin/resetsessions?format=${command.format}?apikey=${command.apikey}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					axios.post(`${base_url}/admin/resetsessions`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
