@@ -11,7 +11,6 @@ const agent = new https.Agent({
     key: fs.readFileSync("./src/cli.key"),
 });
 
-
 export function cli(args) {
 
     program
@@ -22,7 +21,7 @@ export function cli(args) {
 			axios.post(`${base_url}/login?username=${command.username}&password=${command.passw}`,
 				{ httpsAgent: agent })
 				.then(function (response) {
-					fs.writeFile('/tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
+					fs.writeFile('./tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
 						if(err) {
 							return console.log('Writing token failed:', err);
 						}
@@ -30,7 +29,7 @@ export function cli(args) {
 					});
 				})
 				.catch(function (error) {
-					console.log('Login failed: ', error);	//response.data.error
+					console.log('Login failed: ', error.response);
 				});
 		});
     
@@ -41,7 +40,7 @@ export function cli(args) {
 				.then(function (response) {
 					// handle success
 					console.log(response.data);
-					fs.unlink('tmp\/softeng20bAPI.token', function(err) {
+					fs.unlink('.tmp/softeng20bAPI.token', function(err) {
 						if(err) {
 							return console.log('Removing token failed:', err);
 						}
@@ -50,7 +49,7 @@ export function cli(args) {
 				})
 				.catch(function (error) {
 					// handle error
-					console.log('Logout failed: ', error);
+					console.log('Logout failed: ', error.response.status, error.response.statusText);
 				})
 		});
 
@@ -60,88 +59,91 @@ export function cli(args) {
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
 		.action(function (command) {
-			fs.readFile('/tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerPoint?point=${command.point}?datefrom=${command.datefrom}?dateto=${command.dateto}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerPoint/${command.datefrom}/${command.dateto}?point=${command.point}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('SessionsPerPoint failed: ', error);
+						console.log('SessionsPerPoint failed: ', error.response.status, error.response.statusText);
 					})
 			})
 		});
 
     program
 		.command('SessionsPerStation')
+		.requiredOption('--id <value>')
 		.requiredOption('--station <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
 		.action(function (command) {
-			fs.readFile('/tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerStation?station=${command.station}?datefrom=${command.datefrom}?dateto=${command.dateto}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerStation/${command.datefrom}/${command.dateto}?id=${command.id}&station_id=${command.station}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('SessionsPerStation failed: ', error);
+						console.log('SessionsPerStation failed: ', error.response.status, error.response.statusText);
 					})
 			})
 		});
 
     program
 		.command('SessionsPerEV')
-		.requiredOption('--ev <value>')
+		.requiredOption('--id <value>')
+		.requiredOption('--registration_plate <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
 		.action(function (command) {
-			fs.readFile('/tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerEV?ev=${command.ev}?datefrom=${command.datefrom}?dateto=${command.dateto}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerEV/${command.datefrom}/${command.dateto}?id=${command.id}&registration_plate=${command.registration_plate}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('SessionsPerEV failed: ', error);
+						console.log('SessionsPerEV failed: ', error.response.status, error.response.statusText);
 					})
 			})
 		});
 
     program
 		.command('SessionsPerProvider')
-		.requiredOption('--provider <value>')
+		.requiredOption('--id <value>')
+		.requiredOption('--provider_id <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
 		.action(function (command) {
-			fs.readFile('/tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerProvider?provider=${command.provider}?datefrom=${command.datefrom}?dateto=${command.dateto}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerProvider/${command.datefrom}/${command.dateto}?id=${command.id}&provider_id=${command.provider_id}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('{ status: \'error\' }');
+						console.log('SessionsPerProvider failed: ', error.response.status, error.response.statusText);
 					})
 			})
 		});
@@ -162,7 +164,7 @@ export function cli(args) {
 				}
 				const token = JSON.parse(data).token;
 				if (command.usermod && command.username && command.passw){
-                    axios.post(`${base_url}/admin/usermod?username=${command.username}?password=${command.passw}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+                    axios.post(`${base_url}/admin/usermod?username=${command.username}&password=${command.passw}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
                         .then(function (response) {
                             // handle success
                             console.log('Usermod success');
