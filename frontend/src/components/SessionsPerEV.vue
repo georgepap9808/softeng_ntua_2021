@@ -40,9 +40,10 @@
         <div class="single-charge" v-for="charge in charges" :key="charge.id">
           <ul>
             <li>
-              <h6 class = "h6-charges"> Starting Time: {{ charge.starting_time }} </h6>
-              <h6 class = "h6-charges"> Finishing Time: {{ charge.finishing_time }} </h6>
-              <h6 class = "h6-charges"> Total Cost: {{ charge.kwh_cost }} € </h6>
+              <h6 class = "h6-charges"> <b> Starting Time: </b> {{ charge.starting_time }} </h6>
+              <h6 class = "h6-charges"> <b> Finishing Time: </b> {{ charge.finishing_time }} </h6>
+              <h6> <b> Total Energy Consumption: </b> {{ charge.kwh_delivered }} kWh </h6>
+              <h6> <b> Total Cost: </b> {{ charge.kwh_cost*charge.kwh_delivered | round }} € </h6>
             </li>
           </ul>
         </div>
@@ -74,7 +75,7 @@ import Vue from 'vue'
         'Content-Type': 'text/json',
         'X-OBSERVATORY-AUTH': this.$store.getters.token
       }
-      Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerEV/' + this.date_from +
+      Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerEV/' + this.date_from +
       '/' + this.date_to + '?id=' + this.$store.getters.user_id +
       '&registration_plate=' + this.reg_p, {headers: headers})
       .then(response => {

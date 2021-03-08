@@ -1,15 +1,15 @@
 <template>
   <div class = "main-div">
     <NavigationBar/>
-    <h2 v-if = "!this.msg" class = "providers-vue">
-      Energy providers and supporting kWh costs </h2>
     <div class = "show-providers" v-if = "!this.msg">
-      <div class="single-provider">
+      <h2 class = "providers-vue">
+      <b>  Energy providers and supporting kWh costs: </b> </h2>
+      <div class="single-provider" v-for="provider in providers" :key="provider.id">
         <ul>
-          <li v-for="provider in providers" :key="provider.id">
-            <h6> Provider id:  {{ this.provider.id  }} </h6>
-            <h6> Name: {{ this.provider_name }} </h6>
-            <h6> This energy provider offers  </h6>
+          <li>
+            <h6> Provider id:  {{ provider.id  }} </h6>
+            <h6> <b> Name: </b> {{ provider.name }} </h6>
+            <h6> This energy provider costs <b> 1kWh </b> with <b> {{ provider.kwh_cost }}€ </b> </h6>
           </li>
         </ul>
       </div>
@@ -30,8 +30,7 @@ import Vue from 'vue'
         providers: [],
         provider_id: '',
         provider_name: '',
-        provider_kWh: '',
-        msg: ''
+        provider_kWh: ''
       }
     },
     created() {
@@ -39,18 +38,11 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/...&id=' +
-        this.$store.getters.user_id, { headers: headers })
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/allProviders', { headers: headers })
         .then(response => {
-           if (response.data.total == 0) {
-             this.msg = ""
-           }
-           else {
-             this.stations = response.data.providers
-           }
+          this.providers = response.data.providers
         })
         .catch(err => {
-          this.msg = 'Something went wrong, please try again later.'
           console.log(err)
         })
       }
@@ -68,7 +60,7 @@ import Vue from 'vue'
   }
   .providers-vue {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
   }
   .show-providers {
     max-width: 800px;
@@ -78,12 +70,17 @@ import Vue from 'vue'
     padding: 20px;
     margin: 20px 0;
     box-sizing: border-box;
-    background: #D9FFF8;
+    background: #E8D2AE;
   }
   .msg {
     color : #ff0062;
     text-align: center;
     font-size: 0.8em;
     font-weight: bold;
+  }
+  ul {
+   list-style-type: none;
+   padding: 0;
+   margin: 0;
   }
 </style>

@@ -45,11 +45,8 @@ import Vue from 'vue';
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://localhost:8765/evcharge/api/admin/users&is_admin=' + 'true' +
-        '&username=' + this.$store.getters.username,
-            {
-              headers: headers
-            })
+        Vue.axios.get('https://localhost:8765/evcharge/api/users?username='
+        + this.$store.getters.username, { headers: headers})
           .then(response => {
             this.email = response.data.email,
             this.first_name = response.data.first_name,

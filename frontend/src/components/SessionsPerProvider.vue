@@ -37,13 +37,14 @@
     </div>
     <div v-if = "this.charges_loaded">
       <div class="show-charges">
-        <h2> <b> All of your relevant charging sessions: </b> </h2>
+        <h2 class = "charges-title"> <b> All of your relevant charging sessions: </b> </h2>
         <div class="single-charge" v-for="charge in charges" :key="charge.id">
           <ul>
             <li>
               <h6> <b> Starting Time: </b> {{ charge.starting_time }} </h6>
               <h6> <b> Finishing Time: </b> {{ charge.finishing_time }} </h6>
-              <h6> <b> Total Cost: </b> {{ charge.kwh_cost }} € </h6>
+              <h6> <b> Total Energy Consumption: </b> {{ charge.kwh_delivered }} kWh </h6>
+              <h6> <b> Total Cost: </b> {{ charge.kwh_cost*charge.kwh_delivered | round }} € </h6>
             </li>
           </ul>
         </div>
@@ -79,7 +80,7 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         var provider_id = this.provider_data.substring(1,2)
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
         '/' + this.date_to + '?id=' + this.$store.getters.user_id +
         '&provider_id=' + provider_id, {headers: headers})
         .then(response => {
@@ -103,7 +104,8 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         // most probably providerbyUser
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/providers', { headers: headers })
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/providerByUser?id='
+        + this.$store.getters.user_id, { headers: headers })
         .then(response => {
           this.providers = response.data.providers
         })
