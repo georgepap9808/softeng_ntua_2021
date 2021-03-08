@@ -36,42 +36,26 @@ export function cli(args) {
     program
 		.command('logout')
 		.action(function (command) {
-			axios.post(`${base_url}/logout`, { httpsAgent: agent })
-				.then(function (response) {
-					// handle success
-					console.log(response.data);
-					fs.unlink('.tmp/softeng20bAPI.token', function(err) {
-						if(err) {
-							return console.log('Removing token failed:', err);
-						}
-						console.log('Logout successful. Token removed');
-					});
-				})
-				.catch(function (error) {
-					// handle error
-					console.log('Logout failed: ', error.response.status, error.response.statusText);
-				})
-		});
-
-	program
-		.command('SessionsPerPoint')
-		.requiredOption('--point <value>')
-		.requiredOption('--datefrom <value>')
-        .requiredOption('--dateto <value>')
-		.action(function (command) {
 			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
-					return console.log('Token not found. Login first', err);
+					return console.log('Token not found. You are already logged out', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerPoint/${command.datefrom}/${command.dateto}?point=${command.point}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.post(`${base_url}/logout`,
+				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
-						console.log(response.data);
+						console.log('Log me out please', response);
+						fs.unlink('.tmp/softeng20bAPI.token', function(err) {
+							if(err) {
+								return console.log('Removing token failed:', err);
+							}
+							console.log('Logout successful. Token removed');
+						});
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('SessionsPerPoint failed: ', error.response.status, error.response.statusText);
+						console.log('Logout failed: ', error.response);
 					})
 			})
 		});
@@ -88,7 +72,8 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerStation/${command.datefrom}/${command.dateto}?id=${command.id}&station_id=${command.station}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerStation/${command.datefrom}/${command.dateto}?id=${command.id}&station_id=${command.station}`,
+				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
@@ -112,7 +97,8 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerEV/${command.datefrom}/${command.dateto}?id=${command.id}&registration_plate=${command.registration_plate}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerEV/${command.datefrom}/${command.dateto}?id=${command.id}&registration_plate=${command.registration_plate}`,
+				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
@@ -136,7 +122,8 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerProvider/${command.datefrom}/${command.dateto}?id=${command.id}&provider_id=${command.provider_id}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+				axios.get(`${base_url}/SessionsPerProvider/${command.datefrom}/${command.dateto}?id=${command.id}&provider_id=${command.provider_id}`,
+				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
@@ -152,76 +139,87 @@ export function cli(args) {
 		.command('Admin')
 		.option('--username <value>', 'User\'s username')
         .option('--passw <value>', 'User\'s password')
-		.option('--users <value>')
-		.option('--sessionsupd <value>')
+		.option('--is_admin <letters>', 'User is admin')
+		.option('--first_name <letters>', 'User\'s first name')
+		.option('--last_name <letters>', 'User\'s last name')
+		.option('--country <letters>', 'User\'s country')
+		.option('--city <letters>', 'User\'s city')
+		.option('--street <letters>', 'User\'s street')
+		.option('--number <number>', 'User\'s street number')
+		.option('--zip_code <number>', 'User\'s zip code')
+		.option('--users')
+		.option('--usermod')
+		.option('--sessionsupd')
 		.option('--source <value>')
 		.option('--healthcheck')
         .option('--resetsessions')
 		.action(function (command) {
-			fs.readFile('/tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
 				if (command.usermod && command.username && command.passw){
-                    axios.post(`${base_url}/admin/usermod?username=${command.username}&password=${command.passw}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+                    axios.post(`${base_url}/admin/usermod/${command.username}/${command.passw}?is_admin=${command.is_admin}&first_name=${command.first_name}&last_name=${command.last_name}&country=${command.country}&city=${command.city}&street=${command.street}&number=${command.number}&zip_code=${command.zip_code}`,
+					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
                         .then(function (response) {
                             // handle success
-                            console.log('Usermod success');
+                            console.log('Usermod success', response.data);
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log('{ status: \'error\' }');
+                            console.log(error.response.status, error.response.statusText);
                         })
                 }
-				else if(command.usermod){
-					console.log('username and password are required to modify user');
-				}
 				if(command.users){
-                    axios.get(`${base_url}/admin/users?username=${command.username}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+                    axios.get(`${base_url}/admin/users/${command.username}`,
+					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })	
                         .then(function (response) {
                             // handle success
-                            console.log(command.username);
+                            console.log(response.data);
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log('{ status: \'error\' }');
+                            console.log(error.data);
                         })
                 }
                 else if(command.sessionsupd && command.source){
-					axios.post(`${base_url}/admin/system/sessionsupd?source${command.source}`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					axios.post(`${base_url}/admin/system/sessionsupd?source=${command.source}`,
+					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('{ status: \'error\' }');
+						console.log(error.data);
 					})
 				}
 				else if(command.sessionsupd){
 					console.log('source option is required for sessionsupd');
 				}
 				else if(command.healthcheck){
-					axios.get(`${base_url}/admin/healthcheck`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					axios.get(`${base_url}/admin/healthcheck`,
+					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('{ status: \'error\' }');
+						console.log(error.data);
 					})
 				}
 				else if(command.resetsessions){
-					axios.post(`${base_url}/admin/resetsessions`, { httpsAgent: agent, headers: { 'Authorization': `Bearer ${token}` } })
+					axios.post(`${base_url}/admin/resetsessions`,
+					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('{ status: \'error\' }');
+						console.log(error);
 					})
 				}
 			})
