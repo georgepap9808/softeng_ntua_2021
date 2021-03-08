@@ -133,7 +133,13 @@ class SessionsPerDateResource(Resource):
     },location = 'query')
     def get(self, args , token , is_admin,date_from,date_to):
         query = Session.query
-        res = query.filter(Session.user_id == args['id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        if is_admin: 
+            if args['id']==-1:
+                res = query.filter(Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+            else: 
+                res = query.filter(Session.user_id == args['id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        else: 
+            res = query.filter(Session.user_id == args['id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
         total = res.count()
 
         return{
@@ -165,7 +171,14 @@ class SessionsPerProviderResource(Resource):
     },location = 'query')
     def get(self, args , token , is_admin,date_from,date_to):
         query = Session.query
-        res = query.filter(Session.user_id == args['id'],Session.provider_id==args['provider_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        if is_admin: 
+            if args['id']==-1:
+                res = query.filter(Session.provider_id==args['provider_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+            else:
+                res = query.filter(Session.user_id == args['id'],Session.provider_id==args['provider_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        else:
+            res = query.filter(Session.user_id == args['id'],Session.provider_id==args['provider_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))        
+
         total = res.count()
 
         return{
@@ -181,10 +194,17 @@ class SessionsPerStationResource(Resource):
     },location = 'query')
     def get(self, args , token , is_admin,date_from,date_to):
         query = Session.query
-        res = query.filter(Session.user_id == args['id'],Session.station_id==args['station_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        if is_admin: 
+            if args['id']==-1:
+                res = query.filter(Session.station_id==args['station_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+            else: 
+                res = query.filter(Session.user_id == args['id'],Session.station_id==args['station_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
+        else:
+            res = query.filter(Session.user_id == args['id'],Session.station_id==args['station_id'],Session.starting_time < parse_date(date_to),Session.starting_time > parse_date(date_from))
         total = res.count()
 
         return{
             "total":total,
             "sessions":session_schema.dump(res.all(),many=True)
         }
+
