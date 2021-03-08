@@ -4,11 +4,11 @@ const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
 
-const base_url = 'https://127.0.0.1:5000/evcharge/api'		//'https://localhost:8765/evcharge/api';
+const base_url = 'https://127.0.0.1:5000/evcharge/api'
 const agent = new https.Agent({
     rejectUnauthorized: false, // (NOTE: this will disable client verification)
-    cert: fs.readFileSync("./src/cli.crt"),
-    key: fs.readFileSync("./src/cli.key"),
+    cert: fs.readFileSync("src/cli.crt"),
+    key: fs.readFileSync("src/cli.key"),
 });
 
 export function cli(args) {
@@ -21,7 +21,7 @@ export function cli(args) {
 			axios.post(`${base_url}/login?username=${command.username}&password=${command.passw}`,
 				{ httpsAgent: agent })
 				.then(function (response) {
-					fs.writeFile('./tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
+					fs.writeFile('tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
 						if(err) {
 							return console.log('Writing token failed:', err);
 						}
@@ -33,32 +33,43 @@ export function cli(args) {
 				});
 		});
     
-    program
+	program			//works, just delets the token
 		.command('logout')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
-				if (err) {
-					return console.log('Token not found. You are already logged out', err);
+			fs.unlink('tmp/softeng20bAPI.token', function(err) {
+				if(err) {
+					return console.log('Removing token failed:', err);
 				}
-				const token = JSON.parse(data).token;
-				axios.post(`${base_url}/logout`,
-				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
-					.then(function (response) {
-						// handle success
-						console.log('Log me out please', response);
-						fs.unlink('.tmp/softeng20bAPI.token', function(err) {
-							if(err) {
-								return console.log('Removing token failed:', err);
-							}
-							console.log('Logout successful. Token removed');
-						});
-					})
-					.catch(function (error) {
-						// handle error
-						console.log('Logout failed: ', error.response);
-					})
-			})
+				console.log('Logout successful. Token removed');
+			});
 		});
+
+	// program		//can't fucking make it work
+	// 	.command('logout')
+	// 	.action(function (command) {
+	// 		fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
+	// 			if (err) {
+	// 				return console.log('Token not found. You are already logged out', err);
+	// 			}
+	// 			const token = JSON.parse(data).token;
+	// 			axios.post(`${base_url}/logout`,
+	// 			{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+	// 				.then(function (response) {
+	// 					// handle success
+	// 					console.log('Log me out please', response);
+	// 					fs.unlink('tmp/softeng20bAPI.token', function(err) {
+	// 						if(err) {
+	// 							return console.log('Removing token failed:', err);
+	// 						}
+	// 						console.log('Logout successful. Token removed');
+	// 					});
+	// 				})
+	// 				.catch(function (error) {
+	// 					// handle error
+	// 					console.log('Logout failed: ', error.response);
+	// 				})
+	// 		})
+	// 	});
 
     program
 		.command('SessionsPerStation')
@@ -67,7 +78,7 @@ export function cli(args) {
         .requiredOption('--dateto <value>')
 		.option('--admin')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
@@ -96,7 +107,7 @@ export function cli(args) {
         .requiredOption('--dateto <value>')
 		.option('--admin')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
@@ -125,7 +136,7 @@ export function cli(args) {
         .requiredOption('--dateto <value>')
 		.option('--admin')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
@@ -166,13 +177,12 @@ export function cli(args) {
 		.option('--healthcheck')
         .option('--resetsessions')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
 				if (command.usermod && command.username && command.passw){
-					console.log('I am in');
 					axios.post(`${base_url}/admin/usermod/${command.username}/${command.passw}?is_admin=${command.is_admin}&first_name=${command.first_name}&last_name=${command.last_name}&country=${command.country}&city=${command.city}&street=${command.street}&number=${command.number}&zip_code=${command.zip_code}`,
 					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
                         .then(function (response) {
@@ -193,19 +203,20 @@ export function cli(args) {
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log(error.data);
+                            console.log(error.response);
                         })
                 }
                 else if(command.sessionsupd && command.source){
-					axios.post(`${base_url}/admin/system/sessionsupd?source=${command.source}`,
-					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+					//var path = 'test_csv.csv'
+					axios.post(`${base_url}/admin/system/sessionsupd`,
+					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` }, formData :{ file : fs.createReadStream(command.source)} })
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log(error.data);
+						console.log(error.response);
 					})
 				}
 				else if(command.healthcheck){
@@ -217,7 +228,7 @@ export function cli(args) {
 					})
 					.catch(function (error) {
 						// handle error
-						console.log(error.data);
+						console.log(error.response);
 					})
 				}
 				else if(command.resetsessions){

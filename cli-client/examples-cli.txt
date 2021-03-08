@@ -1,0 +1,33 @@
+login:
+ev_group70 login --username markakisn --passw yay123
+
+logout:
+ev_group70 logout
+
+SessionsPerStation:
+ev_group70 SessionsPerStation --station 1 --datefrom 2019-01-01 --dateto 2020-12-05 (--admin)
+
+SessionsPerEV:
+ev_group70 SessionsPerEV --ev GDJ7893 --datefrom 2020-01-01 --dateto 2020-08-03 (--admin)
+
+SessionsPerProvider:
+ev_group70 SessionsPerProvider --provider 2 --datefrom 2020-01-01 --dateto 2020-08-03 (--admin)
+
+Admin:
+
+usermod:
+ev_group70 Admin --usermod --username teslan --passw x2&cDCacGFcu6 --is_admin False --first_name Nikola --last_name Tesla --country Croatia --city Smiljan --street NewYorker --number 77 --zip_code 10001
+
+users:
+ev_group70 Admin --users --username markakisn
+
+sessionsupd:
+ev_group70 Admin --sessionsupd --source test_csv.csv
+
+healthcheck:
+ev_group70 Admin --healthcheck
+
+resetsessions:
+ev_group70 Admin --resetsessions
+
+
