@@ -30,7 +30,7 @@ class ResetSessionResource(Resource):
     @requires_admin
     def post(self,token,is_admin):       
         try:
-            db.session.execute("delete * from session;")
+            db.session.execute("delete from session;")
         except Exception as e: 
             return {"error": str(e)}
         return {'status': "OK"}

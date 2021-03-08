@@ -50,3 +50,4 @@ api.add_resource(SessionsPerDateResource,'/SessionsPerDate/<date_from>/<date_to>
 api.add_resource(SessionsPerEVResource,'/SessionsPerEV/<date_from>/<date_to>')
 api.add_resource(SessionsPerProviderResource,'/SessionsPerProvider/<date_from>/<date_to>')
 api.add_resource(SessionsPerStationResource,'/SessionsPerStation/<date_from>/<date_to>')
+
