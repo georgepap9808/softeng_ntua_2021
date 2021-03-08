@@ -65,6 +65,7 @@ export function cli(args) {
 		.requiredOption('--station <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
+		.option('--admin')
 		.action(function (command) {
 			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
@@ -72,6 +73,9 @@ export function cli(args) {
 				}
 				const token = JSON.parse(data).token;
 				var id = JSON.parse(data).id;
+				if(command.admin){
+					id=-1;
+				}
 				axios.get(`${base_url}/SessionsPerStation/${command.datefrom}/${command.dateto}?id=${id}&station_id=${command.station}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
@@ -87,9 +91,10 @@ export function cli(args) {
 
     program
 		.command('SessionsPerEV')
-		.requiredOption('--registration_plate <value>')
+		.requiredOption('--ev <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
+		.option('--admin')
 		.action(function (command) {
 			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
@@ -97,7 +102,10 @@ export function cli(args) {
 				}
 				const token = JSON.parse(data).token;
 				var id = JSON.parse(data).id;
-				axios.get(`${base_url}/SessionsPerEV/${command.datefrom}/${command.dateto}?id=${id}&registration_plate=${command.registration_plate}`,
+				if(command.admin){
+					id=-1;
+				}
+				axios.get(`${base_url}/SessionsPerEV/${command.datefrom}/${command.dateto}?id=${id}&registration_plate=${command.ev}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
@@ -112,9 +120,10 @@ export function cli(args) {
 
     program
 		.command('SessionsPerProvider')
-		.requiredOption('--provider_id <value>')
+		.requiredOption('--provider <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
+		.option('--admin')
 		.action(function (command) {
 			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
@@ -122,7 +131,10 @@ export function cli(args) {
 				}
 				const token = JSON.parse(data).token;
 				var id = JSON.parse(data).id;
-				axios.get(`${base_url}/SessionsPerProvider/${command.datefrom}/${command.dateto}?id=${id}&provider_id=${command.provider_id}`,
+				if(command.admin){
+					id=-1;
+				}
+				axios.get(`${base_url}/SessionsPerProvider/${command.datefrom}/${command.dateto}?id=${id}&provider_id=${command.provider}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
