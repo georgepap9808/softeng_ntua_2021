@@ -62,7 +62,6 @@ export function cli(args) {
 
     program
 		.command('SessionsPerStation')
-		.requiredOption('--id <value>')
 		.requiredOption('--station <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -72,7 +71,8 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerStation/${command.datefrom}/${command.dateto}?id=${command.id}&station_id=${command.station}`,
+				var id = JSON.parse(data).id;
+				axios.get(`${base_url}/SessionsPerStation/${command.datefrom}/${command.dateto}?id=${id}&station_id=${command.station}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
@@ -87,7 +87,6 @@ export function cli(args) {
 
     program
 		.command('SessionsPerEV')
-		.requiredOption('--id <value>')
 		.requiredOption('--registration_plate <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -97,7 +96,8 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerEV/${command.datefrom}/${command.dateto}?id=${command.id}&registration_plate=${command.registration_plate}`,
+				var id = JSON.parse(data).id;
+				axios.get(`${base_url}/SessionsPerEV/${command.datefrom}/${command.dateto}?id=${id}&registration_plate=${command.registration_plate}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
@@ -112,7 +112,6 @@ export function cli(args) {
 
     program
 		.command('SessionsPerProvider')
-		.requiredOption('--id <value>')
 		.requiredOption('--provider_id <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
@@ -122,7 +121,8 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				axios.get(`${base_url}/SessionsPerProvider/${command.datefrom}/${command.dateto}?id=${command.id}&provider_id=${command.provider_id}`,
+				var id = JSON.parse(data).id;
+				axios.get(`${base_url}/SessionsPerProvider/${command.datefrom}/${command.dateto}?id=${id}&provider_id=${command.provider_id}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
@@ -160,7 +160,8 @@ export function cli(args) {
 				}
 				const token = JSON.parse(data).token;
 				if (command.usermod && command.username && command.passw){
-                    axios.post(`${base_url}/admin/usermod/${command.username}/${command.passw}?is_admin=${command.is_admin}&first_name=${command.first_name}&last_name=${command.last_name}&country=${command.country}&city=${command.city}&street=${command.street}&number=${command.number}&zip_code=${command.zip_code}`,
+					console.log('I am in');
+					axios.post(`${base_url}/admin/usermod/${command.username}/${command.passw}?is_admin=${command.is_admin}&first_name=${command.first_name}&last_name=${command.last_name}&country=${command.country}&city=${command.city}&street=${command.street}&number=${command.number}&zip_code=${command.zip_code}`,
 					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
                         .then(function (response) {
                             // handle success
@@ -171,7 +172,7 @@ export function cli(args) {
                             console.log(error.response.status, error.response.statusText);
                         })
                 }
-				if(command.users){
+				else if(command.users && command.username){
                     axios.get(`${base_url}/admin/users/${command.username}`,
 					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })	
                         .then(function (response) {
@@ -195,9 +196,6 @@ export function cli(args) {
 						console.log(error.data);
 					})
 				}
-				else if(command.sessionsupd){
-					console.log('source option is required for sessionsupd');
-				}
 				else if(command.healthcheck){
 					axios.get(`${base_url}/admin/healthcheck`,
 					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
@@ -215,12 +213,17 @@ export function cli(args) {
 					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
+						console.log('Post okay:', command.resetsessions)
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log(error);
+						console.log('Post NOT okay:', command.resetsessions)
+						console.log(error.response);
 					})
+				}
+				else{
+					console.log('error: required options not specified');
 				}
 			})
 		});
