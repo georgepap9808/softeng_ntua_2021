@@ -16,10 +16,10 @@ ev_group70 SessionsPerProvider --provider 2 --datefrom 2020-01-01 --dateto 2020-
 Admin:
 
 usermod:
-ev_group70 Admin --usermod --username teslan --passw x2&cDCacGFcu6 --is_admin False --first_name Nikola --last_name Tesla --country Croatia --city Smiljan --street NewYorker --number 77 --zip_code 10001
+ev_group70 Admin --usermod --username teslan --passw x2cDCacGFcu6 --is_admin False --first_name Nikola --last_name Tesla --country Croatia --city Smiljan --street NewYorker --number 77 --zip_code 10001
 
 users:
-ev_group70 Admin --users --username markakisn
+ev_group70 Admin --users --username teslan
 
 sessionsupd:
 ev_group70 Admin --sessionsupd --source test_csv.csv

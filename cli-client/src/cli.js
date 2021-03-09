@@ -23,7 +23,7 @@ export function cli(args) {
 				.then(function (response) {
 					fs.writeFile('tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
 						if(err) {
-							return console.log('Writing token failed:', err);
+							return console.log('Writing token failed: ', err);
 						}
 						console.log('Login successful. Token saved');
 					});
@@ -32,44 +32,33 @@ export function cli(args) {
 					console.log('Login failed: ', error.response);
 				});
 		});
-    
-	program			//works, just delets the token
+
+	program
 		.command('logout')
 		.action(function (command) {
-			fs.unlink('tmp/softeng20bAPI.token', function(err) {
-				if(err) {
-					return console.log('Removing token failed:', err);
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
+				if (err) {
+					return console.log('Token not found. You are already logged out', err);
 				}
-				console.log('Logout successful. Token removed');
-			});
+				const token = JSON.parse(data).token;
+				console.log(token);
+				axios({ method: 'POST', url: `${base_url}/logout`,
+				httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+					.then(function (response) {
+						// handle success
+						fs.unlink('tmp/softeng20bAPI.token', function(err) {
+							if(err) {
+								return console.log('Removing token failed:', err);
+							}
+							console.log('Logout successful. Token removed');
+						});
+					})
+					.catch(function (error) {
+						// handle error
+						console.log('Logout failed: ', error.response);
+					})
+			})
 		});
-
-	// program		//can't fucking make it work
-	// 	.command('logout')
-	// 	.action(function (command) {
-	// 		fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
-	// 			if (err) {
-	// 				return console.log('Token not found. You are already logged out', err);
-	// 			}
-	// 			const token = JSON.parse(data).token;
-	// 			axios.post(`${base_url}/logout`,
-	// 			{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
-	// 				.then(function (response) {
-	// 					// handle success
-	// 					console.log('Log me out please', response);
-	// 					fs.unlink('tmp/softeng20bAPI.token', function(err) {
-	// 						if(err) {
-	// 							return console.log('Removing token failed:', err);
-	// 						}
-	// 						console.log('Logout successful. Token removed');
-	// 					});
-	// 				})
-	// 				.catch(function (error) {
-	// 					// handle error
-	// 					console.log('Logout failed: ', error.response);
-	// 				})
-	// 		})
-	// 	});
 
     program
 		.command('SessionsPerStation')
@@ -182,9 +171,10 @@ export function cli(args) {
 					return console.log('Token not found. Login first', err);
 				}
 				const token = JSON.parse(data).token;
-				if (command.usermod && command.username && command.passw){
-					axios.post(`${base_url}/admin/usermod/${command.username}/${command.passw}?is_admin=${command.is_admin}&first_name=${command.first_name}&last_name=${command.last_name}&country=${command.country}&city=${command.city}&street=${command.street}&number=${command.number}&zip_code=${command.zip_code}`,
-					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+
+				if (command.usermod && command.username && command.passw && command.is_admin && command.first_name && command.last_name && command.country && command.city && command.street && command.number && command.zip_code){
+					axios({ method: 'POST', url: `${base_url}/admin/usermod/${command.username}/${command.passw}?is_admin=${command.is_admin}&first_name=${command.first_name}&last_name=${command.last_name}&country=${command.country}&city=${command.city}&street=${command.street}&number=${command.number}&zip_code=${command.zip_code}`,
+					httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
                         .then(function (response) {
                             // handle success
                             console.log('Usermod success', response.data);
@@ -199,7 +189,12 @@ export function cli(args) {
 					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })	
                         .then(function (response) {
                             // handle success
-                            console.log(response.data);
+							if (response.data.error){
+								console.log(`There is no user ${command.username}`);
+							}
+							else{
+								console.log(response.data);
+							}
                         })
                         .catch(function (error) {
                             // handle error
@@ -232,16 +227,14 @@ export function cli(args) {
 					})
 				}
 				else if(command.resetsessions){
-					axios.post(`${base_url}/admin/resetsessions`,
-					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+					axios({ method: 'POST', url: `${base_url}/admin/resetsessions`,
+					httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
 						// handle success
-						console.log('Post okay:', command.resetsessions)
 						console.log(response.data);
 					})
 					.catch(function (error) {
 						// handle error
-						console.log('Post NOT okay:', command.resetsessions)
 						console.log(error.response);
 					})
 				}
