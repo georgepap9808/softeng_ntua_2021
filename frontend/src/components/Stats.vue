@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class = "main-div">
     <NavigationBar/>
   </div>
 </template>
@@ -12,3 +12,10 @@ import NavigationBar from './NavigationBar.vue'
     }
   }
 </script>
+
+<style>
+  .main-div {
+   max-width: 1500px;
+   margin: 0 auto;
+ }
+</style>

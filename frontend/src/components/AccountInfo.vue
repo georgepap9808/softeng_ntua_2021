@@ -45,11 +45,8 @@ import Vue from 'vue';
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://localhost:8765/evcharge/api/admin/users&is_admin=' + 'true' +
-        '&username=' + this.$store.getters.username,
-            {
-              headers: headers
-            })
+        Vue.axios.get('https://localhost:8765/evcharge/api/users?username='
+        + this.$store.getters.username, { headers: headers})
           .then(response => {
             this.email = response.data.email,
             this.first_name = response.data.first_name,
@@ -84,7 +81,7 @@ import Vue from 'vue';
   }
   .account_title {
     font-weight: 750;
-    margin-top: 130px;
+    margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -98,9 +95,9 @@ import Vue from 'vue';
     width: 30%;
   }
   .image_account {
-     width: 130px;
-     height: 150px;
-     background-image: url(../assets/user.png);
+     width: 350px;
+     height: 330px;
+     background-image: url(../assets/info.png);
      margin-top: 60px;
      margin-left: auto;
      margin-right: auto;
@@ -109,6 +106,6 @@ import Vue from 'vue';
   }
   .error_message {
     text-align: center;
-    margin-top: 160px;
+    margin-top: 20px;
   }
 </style>

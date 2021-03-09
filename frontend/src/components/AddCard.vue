@@ -5,10 +5,6 @@
       <h3> Add a new credit card to your account: </h3>
       <form @submit.prevent = "addCard()">
         <div class="form-group">
-          <label> Cardholder Name: </label>
-          <input required v-model = "card_holder_name" type="text" class="form-control" placeholder="Enter caldholder's name">
-        </div>
-        <div class="form-group">
           <label>  Card Number: </label>
           <input required v-model = "card_number" type="password" class="form-control"  maxlength="16" placeholder="Enter card number">
         </div>
@@ -20,8 +16,8 @@
           <label for="model_info"> Security code: </label>
           <input required v-model = "cvc_code" type="text" class="form-control" maxlength="3" placeholder="Enter cvc code">
         </div>
-        <div v-if = "error" class = "message"> {{ error }} </div>
-        <div v-if = "success" class = "message"> {{ success }} </div>
+        <div v-if = "error" class = "error"> {{ error }} </div>
+        <div v-if = "success" class = "success"> {{ success }} </div>
         <div class = "addcard_button">
           <button type="submit" class="btn btn-dark btn-block"> Add Card </button>
         </div>
@@ -48,12 +44,12 @@ import NavigationBar from './NavigationBar.vue'
       }
     },
     methods: {
-      addVehicle: function () {
+      addCard: function () {
         const headers = {
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.post('http://127.0.0.1:5000/evcharge/api/...?user_id=' + this.$store.getters.user_id
+        Vue.axios.post('https://127.0.0.1:5000/evcharge/api/card?user_id=' + this.$store.getters.user_id
         + '&card_number=' + this.card_number + '&card_expiration=' + this.card_expiration
         + '&cvc_code=' + this.cvc_code, { headers: headers })
         .then(() =>
@@ -75,7 +71,7 @@ import NavigationBar from './NavigationBar.vue'
   }
   .addcard_form {
     width: 40%;
-    margin-top: 90px;
+    margin-top: 50px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -83,18 +79,25 @@ import NavigationBar from './NavigationBar.vue'
     width: 20%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 30px;
+    margin-top: 20px;
   }
-  .message {
+  .error {
     color : #ff0062;
     margin-top: 10px;
     margin-bottom: 10px;
     font-size: 0.8em;
     font-weight: bold;
   }
+  .success {
+    color : #16b800;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
   .image_addcard {
-   width: 190px;
-   height: 170px;
+   width: 250px;
+   height: 260px;
    background-image: url(../assets/addcard.png);
    margin-top: 40px;
    margin-left: auto;

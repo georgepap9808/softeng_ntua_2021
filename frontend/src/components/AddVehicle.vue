@@ -18,8 +18,8 @@
           <label for="model_info">Model Info: </label>
           <input required v-model = "model_info" type="text" class="form-control" placeholder="Enter model info">
         </div>
-        <div v-if = "error" class = "message"> {{ error }} </div>
-        <div v-if = "success" class = "message"> {{ success }} </div>
+        <div v-if = "error" class = "error"> {{ error }} </div>
+        <div v-if = "success" class = "success"> {{ success }} </div>
         <div class = "addcar_button">
           <button type="submit" class="btn btn-dark btn-block"> Add Vehicle </button>
         </div>
@@ -51,7 +51,7 @@ import NavigationBar from './NavigationBar.vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.post('http://127.0.0.1:5000/evcharge/api/vehicle?user_id=' + this.$store.getters.user_id
+        Vue.axios.post('https://127.0.0.1:5000/evcharge/api/vehicle?user_id=' + this.$store.getters.user_id
         + '&registration_plate=' + this.reg_plate + '&manufacturer=' + this.manufacturer
         + '&model=' + this.model_info, { headers: headers })
          .then(() =>
@@ -73,7 +73,7 @@ import NavigationBar from './NavigationBar.vue'
   }
   .addcar_form {
     width: 40%;
-    margin-top: 100px;
+    margin-top: 50px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -81,20 +81,27 @@ import NavigationBar from './NavigationBar.vue'
     width: 20%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 30px;
+    margin-top: 20px;
   }
   .image_addcar {
-   width: 180px;
-   height: 130px;
+   width: 250px;
+   height: 240px;
    background-image: url(../assets/addcar.png);
-   margin-top: 60px;
+   margin-top: 40px;
    margin-left: auto;
    margin-right: auto;
    background-size: 100%;
    background-repeat: no-repeat;
   }
-  .message {
+  .error {
     color : #ff0062;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+  .success {
+    color : #16b800;
     margin-top: 10px;
     margin-bottom: 10px;
     font-size: 0.8em;

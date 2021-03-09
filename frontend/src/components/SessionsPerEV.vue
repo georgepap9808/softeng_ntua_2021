@@ -10,18 +10,18 @@
         <p> The charges loaded will refer only to the selected vehicle and time span. </p>
       </div>
       <div class = "charges_input_box">
-        <label> Registration Plate: </label>
+        <label> <b> Registration Plate: </b> </label>
         <input class = "input-id" maxlength="8" type="text" v-model="reg_p">
       </div>
       <form class = "date_form" @submit.prevent = "showCharges()">
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label">Start Date :</label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> Start Date: </b> </label>
           <div class="col-10">
             <input class="form-control" type="date" v-model = "date_from">
           </div>
         </div>
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label">End Date :</label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> End Date: </b> </label>
           <div class="col-10">
             <input class="form-control" type="date" v-model = "date_to">
           </div>
@@ -40,9 +40,10 @@
         <div class="single-charge" v-for="charge in charges" :key="charge.id">
           <ul>
             <li>
-              <h6 class = "h6-charges"> Starting Time: {{ charge.starting_time }} </h6>
-              <h6 class = "h6-charges"> Finishing Time: {{ charge.finishing_time }} </h6>
-              <h6 class = "h6-charges"> Total Cost: {{ charge.kwh_cost }} € </h6>
+              <h6 class = "h6-charges"> <b> Starting Time: </b> {{ charge.starting_time }} </h6>
+              <h6 class = "h6-charges"> <b> Finishing Time: </b> {{ charge.finishing_time }} </h6>
+              <h6> <b> Total Energy Consumption: </b> {{ charge.kwh_delivered }} kWh </h6>
+              <h6> <b> Total Cost: </b> {{ charge.kwh_cost*charge.kwh_delivered | round }} € </h6>
             </li>
           </ul>
         </div>
@@ -74,7 +75,7 @@ import Vue from 'vue'
         'Content-Type': 'text/json',
         'X-OBSERVATORY-AUTH': this.$store.getters.token
       }
-      Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerEV/' + this.date_from +
+      Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerEV/' + this.date_from +
       '/' + this.date_to + '?id=' + this.$store.getters.user_id +
       '&registration_plate=' + this.reg_p, {headers: headers})
       .then(response => {
@@ -111,7 +112,7 @@ import Vue from 'vue'
     margin-right: auto;
   }
   .charges_input_box {
-    margin-left: 33.5%;
+    margin-left: 25%;
     width: 50%;
   }
   .input-id {
@@ -130,10 +131,10 @@ import Vue from 'vue'
     margin-top: 50px;
   }
   .image_adddate {
-   width: 310px;
-   height: 270px;
+   width: 270px;
+   height: 275px;
    background-image: url(../assets/adddates1.png);
-   margin-top: 40px;
+   margin-top: 20px;
    margin-left: auto;
    margin-right: auto;
    background-size: 100%;

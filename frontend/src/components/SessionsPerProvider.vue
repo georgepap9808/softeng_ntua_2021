@@ -7,7 +7,7 @@
       <p class = "instructions-b">
         The charges loaded will refer only to the selected provider and time span. </p>
       <div class = "select-charges">
-        <label id = "select-label"> Pick a provider: </label>
+        <label id = "select-label"> <b> Pick a provider: </b> </label>
         <select v-model = "provider_data">
           <option v-for = "provider in providers" :key = "provider.id">
             [{{ provider.id }}] {{ provider.name }}
@@ -16,13 +16,13 @@
       </div>
       <form class = "date-form" @submit.prevent = "showCharges()">
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label">Start Date:</label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> Start Date: </b> </label>
           <div class="col-10">
             <input class="form-control" type="date" v-model = "date_from">
           </div>
         </div>
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label">End Date:</label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> End Date: </b></label>
           <div class="col-10">
             <input class="form-control" type="date" v-model = "date_to">
           </div>
@@ -37,13 +37,14 @@
     </div>
     <div v-if = "this.charges_loaded">
       <div class="show-charges">
-        <h2> <b> All of your relevant charging sessions: </b> </h2>
+        <h2 class = "charges-title"> <b> All of your relevant charging sessions: </b> </h2>
         <div class="single-charge" v-for="charge in charges" :key="charge.id">
           <ul>
             <li>
               <h6> <b> Starting Time: </b> {{ charge.starting_time }} </h6>
               <h6> <b> Finishing Time: </b> {{ charge.finishing_time }} </h6>
-              <h6> <b> Total Cost: </b> {{ charge.kwh_cost }} € </h6>
+              <h6> <b> Total Energy Consumption: </b> {{ charge.kwh_delivered }} kWh </h6>
+              <h6> <b> Total Cost: </b> {{ charge.kwh_cost*charge.kwh_delivered | round }} € </h6>
             </li>
           </ul>
         </div>
@@ -79,7 +80,7 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         var provider_id = this.provider_data.substring(1,2)
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
         '/' + this.date_to + '?id=' + this.$store.getters.user_id +
         '&provider_id=' + provider_id, {headers: headers})
         .then(response => {
@@ -103,7 +104,8 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         // most probably providerbyUser
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/providers', { headers: headers })
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/providerByUser?id='
+        + this.$store.getters.user_id, { headers: headers })
         .then(response => {
           this.providers = response.data.providers
         })
@@ -137,8 +139,8 @@ import Vue from 'vue'
     margin: 50px auto;
   }
   .image-adddate {
-   width: 260px;
-   height: 240px;
+   width: 280px;
+   height: 260px;
    background-image: url(../assets/adddates2.png);
    margin-top: 40px;
    margin-left: auto;
@@ -166,7 +168,7 @@ import Vue from 'vue'
     margin-top: 30px;
   }
   .select-charges {
-    margin-left: 33.5%;
+    margin-left: 25%;
   }
   ul {
    list-style-type: none;
@@ -174,6 +176,6 @@ import Vue from 'vue'
    margin: 0;
   }
   #select-label {
-    margin-right: 10px;
+    margin-right: 34px;
   }
 </style>

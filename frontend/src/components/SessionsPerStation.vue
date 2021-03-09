@@ -9,7 +9,7 @@
         and during the selected time period. Only stations where you have charged at least <br>
         once will appear as selection options. </p>
       <div class = "select-charges">
-        <label id = "select-label"> Pick a station: </label>
+        <label id = "select-label"> <b> Pick a station: </b> </label>
         <select v-model = "station_data">
           <option v-for = "station in stations" :key = "station.id">
             [{{ station.id }}]
@@ -20,13 +20,13 @@
       </div>
       <form class = "date_form" @submit.prevent = "showCharges()">
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label"> Start Date: </label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> Start Date: </b> </label>
           <div class="col-10">
             <input class="form-control" type="date" v-model="date_from">
           </div>
         </div>
         <div class="form-group row">
-          <label for="example-date-input" class="col-2 col-form-label"> End Date: </label>
+          <label for="example-date-input" class="col-2 col-form-label"> <b> End Date: </b> </label>
           <div class="col-10">
             <input class="form-control" type="date" v-model="date_to">
           </div>
@@ -41,13 +41,14 @@
     </div>
     <div v-if = "this.charges_loaded">
       <div class="show_charges">
-        <h2 class = "charges-title"> All of your relevant charging sessions: </h2>
+        <h2 class = "charges-title"> <b> All of your relevant charging sessions: </b> </h2>
         <div class="single_charge" v-for="charge in charges" :key="charge.id">
           <ul>
             <li>
               <h6> <b> Starting Time: </b> {{ charge.starting_time }} </h6>
               <h6> <b> Finishing Time: </b> {{ charge.finishing_time }} </h6>
-              <h6> <b> Total Cost: </b> {{ charge.kwh_cost }} € </h6>
+              <h6> <b> Total Energy Consumption: </b> {{ charge.kwh_delivered }} kWh </h6>
+              <h6> <b> Total Cost: </b> {{ charge.kwh_cost*charge.kwh_delivered | round }} € </h6>
             </li>
           </ul>
         </div>
@@ -83,7 +84,7 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         var station_id = this.station_data.substring(1,2)
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerStation/' + this.date_from +
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerStation/' + this.date_from +
         '/' + this.date_to + '?id=' + this.$store.getters.user_id +
         '&station_id=' + station_id, {headers: headers})
         .then(response => {
@@ -106,7 +107,7 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/stationByUser?id=' +
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/stationByUser?id=' +
         this.$store.getters.user_id, { headers: headers })
         .then(response => {
            if (response.data.total == 0) {
@@ -149,8 +150,8 @@ import Vue from 'vue'
     margin-top: 50px;
   }
   .image_adddate {
-   width: 270px;
-   height: 220px;
+   width: 280px;
+   height: 260px;
    background-image: url(../assets/adddates3.png);
    margin-top: 30px;
    margin-left: auto;
@@ -159,7 +160,7 @@ import Vue from 'vue'
    background-repeat: no-repeat;
   }
   .select-charges {
-    margin-left: 33.5%;
+    margin-left: 25%;
   }
   .show_charges {
     max-width: 800px;
@@ -186,6 +187,6 @@ import Vue from 'vue'
    margin: 0;
   }
   #select-label {
-    margin-right: 10px;
+    margin-right: 34px;
   }
 </style>
