@@ -18,7 +18,9 @@
     "axios": "^0.21.1",
     "coffee-script": "^1.12.7",
     "commander": "^7.1.0",
+    "document": "^0.4.7",
     "esm": "^3.2.25",
+    "form-data": "^4.0.0",
     "fs": "0.0.1-security",
     "https": "^1.0.0"
   }

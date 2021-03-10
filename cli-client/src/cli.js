@@ -3,6 +3,8 @@ const program = require('commander');
 const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
+const FormData = require('form-data');
+//const document = require('document');
 
 const base_url = 'https://127.0.0.1:5000/evcharge/api'
 const agent = new https.Agent({
@@ -177,11 +179,11 @@ export function cli(args) {
 					httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
                         .then(function (response) {
                             // handle success
-                            console.log('Usermod success', response.data);
+                            console.log(response.data);
                         })
                         .catch(function (error) {
                             // handle error
-                            console.log(error.response.status, error.response.statusText);
+                            console.log(error.response);
                         })
                 }
 				else if(command.users && command.username){
@@ -202,9 +204,10 @@ export function cli(args) {
                         })
                 }
                 else if(command.sessionsupd && command.source){
-					//var path = 'test_csv.csv'
-					axios.post(`${base_url}/admin/system/sessionsupd`,
-					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` }, formData :{ file : fs.createReadStream(command.source)} })
+					const formData = new FormData();
+					formData.append('file', fs.createReadStream(command.source));
+					axios({ method: 'POST', url: `${base_url}/admin/system/sessionsupd`, data: formData,
+					httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}`, ...formData.getHeaders()}})
 					.then(function (response) {
 						// handle success
 						console.log(response.data);
