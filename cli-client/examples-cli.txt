@@ -8,7 +8,7 @@ SessionsPerStation:
 ev_group70 SessionsPerStation --station 1 --datefrom 2020-06-01 --dateto 2020-08-05 (--admin)
 
 SessionsPerEV:
-ev_group70 SessionsPerEV --ev GDJ7893 --datefrom 2020-03-01 --dateto 2020-05-03 (--admin)
+ev_group70 SessionsPerEV --ev GDJ7893 --datefrom 2020-03-01 --dateto 2020-05-03
 
 SessionsPerProvider:
 ev_group70 SessionsPerProvider --provider 2 --datefrom 2020-02-03 --dateto 2020-04-10 (--admin)
