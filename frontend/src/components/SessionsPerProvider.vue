@@ -80,7 +80,7 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         var provider_id = this.provider_data.substring(1,2)
-        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerProvider/' + this.date_from +
         '/' + this.date_to + '?id=' + this.$store.getters.user_id +
         '&provider_id=' + provider_id, {headers: headers})
         .then(response => {
@@ -104,7 +104,7 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         // most probably providerbyUser
-        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/providerByUser?id='
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/providerByUser?id='
         + this.$store.getters.user_id, { headers: headers })
         .then(response => {
           this.providers = response.data.providers

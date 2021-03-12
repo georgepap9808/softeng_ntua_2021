@@ -13,7 +13,6 @@
           </li>
         </ul>
       </div>
-      <div v-if = "this.msg"> {{ this.msg }} </div>
     </div>
   </div>
 </template>
@@ -38,7 +37,7 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/allProviders', { headers: headers })
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/allProviders', { headers: headers })
         .then(response => {
           this.providers = response.data.providers
         })
@@ -71,12 +70,6 @@ import Vue from 'vue'
     margin: 20px 0;
     box-sizing: border-box;
     background: #E8D2AE;
-  }
-  .msg {
-    color : #ff0062;
-    text-align: center;
-    font-size: 0.8em;
-    font-weight: bold;
   }
   ul {
    list-style-type: none;

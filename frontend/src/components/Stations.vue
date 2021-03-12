@@ -62,7 +62,7 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         var id = this.station_data.substring(1,2)
-        Vue.axios.post('https://127.0.0.1:5000/evcharge/api/station/rating?id=' +
+        Vue.axios.post('http://127.0.0.1:5000/evcharge/api/station/rating?id=' +
         id + '&rating=' + this.rating, { headers: headers })
         .then(() => {
           this.success = "Rating successfully submitted."
@@ -78,7 +78,7 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/stationByUser?id=' +
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/stationByUser?id=' +
         this.$store.getters.user_id, { headers: headers })
         .then(response => {
            if (response.data.total == 0) {
@@ -134,8 +134,8 @@ import Vue from 'vue'
     margin-left: 15px;
   }
   .rate-station {
-    margin: 20px 0;
-    padding-top: 20px;
+    margin: 15px 0;
+    padding-top: 15px;
   }
   .label_2 {
     margin-left: 10px;

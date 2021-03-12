@@ -13,6 +13,7 @@
     "bootstrap": "^4.5.3",
     "core-js": "^3.6.5",
     "jquery": "^3.5.1",
+    "progressbar.js": "^1.1.0",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
     "vue-axios-qs": "^1.0.3",

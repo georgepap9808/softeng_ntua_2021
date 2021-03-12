@@ -3,6 +3,7 @@
     <NavigationBar/>
     <div class="show-bills">
       <h2 class = "bills-title"> Your Billing History: </h2>
+      <p class = "monthly-bills"> Charging bills are issued monthly. </p>
       <div v-if = "show_more" class="single-bill">
         <!-- <div v-if = "show_more_err" class = "message"> {{ this.show_more_err }} </div> -->
         <h6 style="margin-bottom:30px;"> <b> Charges included in the selected bill: </b> </h6>
@@ -71,7 +72,7 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.put('https://127.0.0.1:5000/evcharge/api/bill?bill_id=' +
+        Vue.axios.put('http://127.0.0.1:5000/evcharge/api/bill?bill_id=' +
           bill_id, { headers: headers })
          .then(() =>
            this.success = 'Selected bill was successfully paid.'
@@ -85,13 +86,14 @@ import Vue from 'vue'
         var month = start_date.substring(5,7)
         var year = start_date.substring(0,4)
         var date_from = year + '-' + month + '-' + '01'
-        var date_to = year + '-' + month + '-' + '31'
+        var date_to = year + '-' + month + '-' + '30'
+        // in a later version --> a more extensive month check
         this.show_more = true
         const headers = {
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerDate/' + date_from +
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerDate/' + date_from +
         '/' + date_to + '?id=' + this.$store.getters.user_id, {headers: headers})
         .then(response =>
              this.sessions = response.data.sessions
@@ -107,7 +109,7 @@ import Vue from 'vue'
         'Content-Type': 'text/json',
         'X-OBSERVATORY-AUTH': this.$store.getters.token
       }
-      Vue.axios.get('https://127.0.0.1:5000/evcharge/api/bill'
+      Vue.axios.get('http://127.0.0.1:5000/evcharge/api/bill'
        + '?user_id=' + this.$store.getters.user_id, {headers: headers})
       .then(response => {
          if (response.data.total == 0) {
@@ -176,5 +178,9 @@ import Vue from 'vue'
    list-style-type: none;
    padding: 0;
    margin: 0;
+  }
+  .monthly-bills {
+   text-align: left;
+   margin-top: 0px;
   }
 </style>
