@@ -38,7 +38,7 @@ class AddSingleSessionResource(Resource):
         'kwh_cost': fields.Float(required=True),
         'kwh_delivered': fields.Float(required=True),
         'provider_id': fields.Int(required=True)
-    })
+    },location='query')
     def post(self,args,token,is_admin):
         sess = Session(
                 user_id = args['user_id'],
