@@ -42,7 +42,7 @@
             <li>
               <h6 class = "h6-charges"> <b> Starting Time: </b> {{ charge.starting_time }} </h6>
               <h6 class = "h6-charges"> <b> Finishing Time: </b> {{ charge.finishing_time }} </h6>
-              <h6> <b> Total Energy Consumption: </b> {{ charge.kwh_delivered }} kWh </h6>
+              <h6> <b> Total Energy Consumption: </b> {{ charge.kwh_delivered | round }} kWh </h6>
               <h6> <b> Total Cost: </b> {{ charge.kwh_cost*charge.kwh_delivered | round }} € </h6>
             </li>
           </ul>
