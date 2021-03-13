@@ -13,15 +13,30 @@
 					"script": {
 						"exec": [
 							"let jsonData = pm.response.json();\r",
+							"pm.globals.set(\"tokens\", jsonData.token);\r",
+							"\r",
+							"const getRequest = {\r",
+							"    url: 'https://127.0.0.1:5000/evcharge/api/providerByUser?id=1',\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'X-OBSERVATORY-AUTH': data.token\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({ key: 'this is json' })\r",
+							"    }\r",
+							"};\r",
 							"\r",
 							"pm.test(\"Health Check\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Login Test\", function () {\r",
-							"    let hash = jsonData.hash;\r",
-							"    pm.expect(jsonData.hash).to.eql(\"pbkdf2:sha256:150000$ct5SjfqH$fab44d5e71fafb975f45c5799d5bcc0795d463aae65a0bae9e7b123172630ac6\");\r",
+							"pm.test(\"Token test\", function() {\r",
+							"    // pm.response.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.sendRequest(getRequest, (err, res) => {\r",
+							"        pm.expect(pm.response.headers.get('X-OBSERVATORY-AUTH')).to.eql(data.token);\r",
+							"    })\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -158,6 +173,630 @@
 							"key": "id",
 							"value": "1"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UsersData",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let users_data = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"UsersData check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(users_data).to.have.all.keys('username', 'first_name', 'last_name', 'country', 'city', 'street', 'number', 'zip_code');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/admin/users/markakisn",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admin",
+						"users",
+						"markakisn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UsersVehicles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let vehicle_data = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"UsersVehicles check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(vehicle_data).to.have.all.keys('total', 'vehicles');\r",
+							"    pm.expect(vehicle_data.total).to.be.a('number');\r",
+							"    pm.expect(vehicle_data.vehicles).to.be.an('array');\r",
+							"    if (vehicle_data.vehicles.length != 0) {\r",
+							"        pm.expect(vehicle_data.vehicles[0]).to.have.all.keys('registration_plate', 'user_id', 'manufacturer', 'model');\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/vehicle?user_id=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"vehicle"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "StationByUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let station_data = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Stations check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(station_data.total).to.be.a('number');\r",
+							"    pm.expect(station_data.stations).to.be.an('array');\r",
+							"    if (station_data.stations.length != 0) {\r",
+							"        pm.expect(station_data.stations[0]).to.have.all.keys('id', 'number', 'country', 'city', 'avg_rating', 'num_ratings', 'street');\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}stationByUser?id=1",
+					"host": [
+						"{{url}}stationByUser"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bill",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let bill_data = pm.response.json();\r",
+							"\r",
+							"// console.log(station_data);\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Bills check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(bill_data.total).to.be.a('number');\r",
+							"    pm.expect(bill_data.bills).to.be.an('array');\r",
+							"    if (bill_data.bills.length != 0) {\r",
+							"        pm.expect(bill_data.bills[0]).to.have.all.keys('period_end_date', 'id', 'user_id', 'period_start_date', 'is_paid', 'total_cost');\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}bill?user_id=1",
+					"host": [
+						"{{url}}bill"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserCards",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let card_data = pm.response.json();\r",
+							"\r",
+							"// console.log(station_data);\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Bills check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(pm.response.headers.get('X-OBSERVATORY-AUTH')).to.eql(data.token);\r",
+							"    pm.expect(card_data.total).to.be.a('number');\r",
+							"    pm.expect(card_data.cards).to.be.an('array');\r",
+							"    if (card_data.cards.length != 0) {\r",
+							"        pm.expect(card_data.cards[0]).to.have.all.keys('cvc_code', 'card_expiration', 'card_number', 'user_id');\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}card?user_id=1",
+					"host": [
+						"{{url}}card"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CheckCard",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let check_card = pm.response.json();\r",
+							"\r",
+							"const getRequest = {\r",
+							"    url: 'https://127.0.0.1:5000/evcharge/api/card?user_id=1',\r",
+							"    method: 'GET',\r",
+							"    header: {\r",
+							"        'X-OBSERVATORY-AUTH': data.token\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({ key: 'this is json' })\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"pm.test(\"Health check #1\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Health check #2\", function() {\r",
+							"    pm.sendRequest(getRequest, (err, res) => {\r",
+							"        pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"        pm.response.to.have.status(200);\r",
+							"        pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"    })\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card check\", function() {\r",
+							"    pm.sendRequest(getRequest, (err, res) => {\r",
+							"        pm.expect(pm.response.json()).to.eql(check_card);\r",
+							"    })\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}card?user_id=1&card_number=1234567890091234&card_expiration=0123&cvc_code=123",
+					"host": [
+						"{{url}}card"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "1"
+						},
+						{
+							"key": "card_number",
+							"value": "1234567890091234"
+						},
+						{
+							"key": "card_expiration",
+							"value": "0123"
+						},
+						{
+							"key": "cvc_code",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SessionsPerDate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let perdate_data = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"SessionsPerDate check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(pm.response.headers.get('X-OBSERVATORY-AUTH')).to.eql(data.token);\r",
+							"    pm.expect(perdate_data.total).to.be.a('number');\r",
+							"    pm.expect(perdate_data.sessions).to.be.an('array');\r",
+							"    if (perdate_data.sessions.length != 0) {\r",
+							"        pm.expect(perdate_data.sessions[0]).to.have.all.keys('finishing_time', 'id', 'station_id', 'user_id', 'provider_id', 'registration_plate', 'kwh_delivered', 'starting_time', 'kwh_cost');\r",
+							"        pm.expect(perdate_data.sessions[0].user_id).to.eql(1);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}SessionsPerDate/2017-01-01/2021-01-01?id=1",
+					"host": [
+						"{{url}}SessionsPerDate"
+					],
+					"path": [
+						"2017-01-01",
+						"2021-01-01"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SessionsPerEV",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let perev_data = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"SessionsPerEV check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(pm.response.headers.get('X-OBSERVATORY-AUTH')).to.eql(data.token);\r",
+							"    pm.expect(perev_data.total).to.be.a('number');\r",
+							"    pm.expect(perev_data.sessions).to.be.an('array');\r",
+							"    if (perev_data.sessions.length > 0) {\r",
+							"        pm.expect(perev_data.sessions[0]).to.have.all.keys('finishing_time', 'id', 'station_id', 'user_id', 'provider_id', 'registration_plate', 'kwh_delivered', 'starting_time', 'kwh_cost');\r",
+							"        pm.expect(perev_data.sessions[0].registration_plate).to.eql('GDJ7893');\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}SessionsPerEV/2017-01-01/2021-01-01?id=1&registration_plate=GDJ7893",
+					"host": [
+						"{{url}}SessionsPerEV"
+					],
+					"path": [
+						"2017-01-01",
+						"2021-01-01"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						},
+						{
+							"key": "registration_plate",
+							"value": "GDJ7893"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SessionsPerProvider",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let perprov_data = pm.response.json();\r",
+							"\r",
+							"// console.log(station_data);\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"SessionsPerProvider check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(pm.response.headers.get('X-OBSERVATORY-AUTH')).to.eql(data.token);\r",
+							"    pm.expect(perprov_data.total).to.be.a('number');\r",
+							"    pm.expect(perprov_data.sessions).to.be.an('array');\r",
+							"    if (perprov_data.sessions.length != 0) {\r",
+							"        pm.expect(perprov_data.sessions[0]).to.have.all.keys('finishing_time', 'id', 'station_id', 'user_id', 'provider_id', 'registration_plate', 'kwh_delivered', 'starting_time', 'kwh_cost');\r",
+							"        pm.expect(perprov_data.sessions[0].provider_id).to.eql(1);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}SessionsPerProvider/2017-01-01/2021-01-01?id=1&provider_id=1",
+					"host": [
+						"{{url}}SessionsPerProvider"
+					],
+					"path": [
+						"2017-01-01",
+						"2021-01-01"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						},
+						{
+							"key": "provider_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SessionsPerStation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let perstation_data = pm.response.json();\r",
+							"\r",
+							"// console.log(station_data);\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"SessionsPerStation check\", function() {\r",
+							"    pm.request.to.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"    pm.expect(pm.response.headers.get('X-OBSERVATORY-AUTH')).to.eql(data.token);\r",
+							"    pm.expect(perstation_data.total).to.be.a('number');\r",
+							"    pm.expect(perstation_data.sessions).to.be.an('array');\r",
+							"    if (perstation_data.sessions.length != 0) {\r",
+							"        pm.expect(perstation_data.sessions[0]).to.have.all.keys('finishing_time', 'id', 'station_id', 'user_id', 'provider_id', 'registration_plate', 'kwh_delivered', 'starting_time', 'kwh_cost');\r",
+							"        pm.expect(perstation_data.sessions[0].station_id).to.eql(10);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}SessionsPerStation/2017-01-01/2021-01-01?id=1&station_id=10",
+					"host": [
+						"{{url}}SessionsPerStation"
+					],
+					"path": [
+						"2017-01-01",
+						"2021-01-01"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						},
+						{
+							"key": "station_id",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"postman.clearGlobalVariable(\"tokens\");\r",
+							"\r",
+							"pm.test(\"Health check\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Logout check\", function() {\r",
+							"    pm.response.to.not.have.header(\"X-OBSERVATORY-AUTH\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{tokens}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}logout",
+					"host": [
+						"{{url}}logout"
 					]
 				}
 			},
