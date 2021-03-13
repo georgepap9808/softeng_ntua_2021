@@ -3,12 +3,14 @@ const program = require('commander');
 const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
+const FormData = require('form-data');
+const chalk = require('chalk');
 
-const base_url = 'https://127.0.0.1:5000/evcharge/api'		//'https://localhost:8765/evcharge/api';
+const base_url = 'https://127.0.0.1:5000/evcharge/api'
 const agent = new https.Agent({
     rejectUnauthorized: false, // (NOTE: this will disable client verification)
-    cert: fs.readFileSync("./src/cli.crt"),
-    key: fs.readFileSync("./src/cli.key"),
+    cert: fs.readFileSync("src/cli.crt"),
+    key: fs.readFileSync("src/cli.key"),
 });
 
 export function cli(args) {
@@ -21,41 +23,38 @@ export function cli(args) {
 			axios.post(`${base_url}/login?username=${command.username}&password=${command.passw}`,
 				{ httpsAgent: agent })
 				.then(function (response) {
-					fs.writeFile('./tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
+					fs.writeFile('tmp/softeng20bAPI.token', JSON.stringify(response.data), function(err) {
 						if(err) {
-							return console.log('Writing token failed:', err);
+							return console.log(chalk.red.bold.underline('Writing token failed: '), err);
 						}
-						console.log('Login successful. Token saved');
+						console.log(chalk.green.bold('Login successful. Token saved'));
 					});
 				})
 				.catch(function (error) {
-					console.log('Login failed: ', error.response);
+					console.log(chalk.red.bold.underline('Login failed:'), error.response.status, chalk.magenta.bold(error.response.statusText));
 				});
 		});
-    
-    program
+
+	program
 		.command('logout')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
-					return console.log('Token not found. You are already logged out', err);
+					return console.log(chalk.red.bold.underline('Token not found. You are already logged out!\n'), err);
 				}
 				const token = JSON.parse(data).token;
-				axios.post(`${base_url}/logout`,
-				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+				axios({ method: 'POST', url: `${base_url}/logout`,
+				httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
-						// handle success
-						console.log('Log me out please', response);
-						fs.unlink('.tmp/softeng20bAPI.token', function(err) {
+						fs.unlink('tmp/softeng20bAPI.token', function(err) {
 							if(err) {
-								return console.log('Removing token failed:', err);
+								return console.log(chalk.red.bold.underline('Removing token failed: '), err);
 							}
-							console.log('Logout successful. Token removed');
+							console.log(chalk.green.bold('Logout successful. Token removed'));
 						});
 					})
 					.catch(function (error) {
-						// handle error
-						console.log('Logout failed: ', error.response);
+						console.log(chalk.red.bold.underline('Logout failed:'), error.response.data);
 					})
 			})
 		});
@@ -67,9 +66,9 @@ export function cli(args) {
         .requiredOption('--dateto <value>')
 		.option('--admin')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
-					return console.log('Token not found. Login first', err);
+					return console.log(chalk.red.bold.underline('Token not found. Login first.\n'), err);
 				}
 				const token = JSON.parse(data).token;
 				var id = JSON.parse(data).id;
@@ -79,12 +78,10 @@ export function cli(args) {
 				axios.get(`${base_url}/SessionsPerStation/${command.datefrom}/${command.dateto}?id=${id}&station_id=${command.station}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
-						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
-						// handle error
-						console.log('SessionsPerStation failed: ', error.response.status, error.response.statusText);
+						console.log(chalk.red.bold.underline('SessionsPerStation failed:'), error.response.status, chalk.magenta.bold(error.response.statusText));
 					})
 			})
 		});
@@ -94,26 +91,20 @@ export function cli(args) {
 		.requiredOption('--ev <value>')
 		.requiredOption('--datefrom <value>')
         .requiredOption('--dateto <value>')
-		.option('--admin')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
-					return console.log('Token not found. Login first', err);
+					return console.log(chalk.red.bold.underline('Token not found. Login first.\n'), err);
 				}
 				const token = JSON.parse(data).token;
 				var id = JSON.parse(data).id;
-				if(command.admin){
-					id=-1;
-				}
 				axios.get(`${base_url}/SessionsPerEV/${command.datefrom}/${command.dateto}?id=${id}&registration_plate=${command.ev}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
-						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
-						// handle error
-						console.log('SessionsPerEV failed: ', error.response.status, error.response.statusText);
+						console.log(chalk.red.bold.underline('SessionsPerEV failed:'), error.response.status, chalk.magenta.bold(error.response.statusText));
 					})
 			})
 		});
@@ -125,9 +116,9 @@ export function cli(args) {
         .requiredOption('--dateto <value>')
 		.option('--admin')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
-					return console.log('Token not found. Login first', err);
+					return console.log(chalk.red.bold.underline('Token not found. Login first.\n'), err);
 				}
 				const token = JSON.parse(data).token;
 				var id = JSON.parse(data).id;
@@ -137,12 +128,10 @@ export function cli(args) {
 				axios.get(`${base_url}/SessionsPerProvider/${command.datefrom}/${command.dateto}?id=${id}&provider_id=${command.provider}`,
 				{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
-						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
-						// handle error
-						console.log('SessionsPerProvider failed: ', error.response.status, error.response.statusText);
+						console.log(chalk.red.bold.underline('SessionsPerProvider failed:'), error.response.status, chalk.magenta.bold(error.response.statusText));
 					})
 			})
 		});
@@ -166,76 +155,72 @@ export function cli(args) {
 		.option('--healthcheck')
         .option('--resetsessions')
 		.action(function (command) {
-			fs.readFile('./tmp/softeng20bAPI.token', function(err, data) {
+			fs.readFile('tmp/softeng20bAPI.token', function(err, data) {
 				if (err) {
-					return console.log('Token not found. Login first', err);
+					return console.log(chalk.red.bold.underline('Token not found. Login first.\n'), err);
 				}
 				const token = JSON.parse(data).token;
-				if (command.usermod && command.username && command.passw){
-					console.log('I am in');
-					axios.post(`${base_url}/admin/usermod/${command.username}/${command.passw}?is_admin=${command.is_admin}&first_name=${command.first_name}&last_name=${command.last_name}&country=${command.country}&city=${command.city}&street=${command.street}&number=${command.number}&zip_code=${command.zip_code}`,
-					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+
+				if (command.usermod && command.username && command.passw && command.is_admin && command.first_name && command.last_name && command.country && command.city && command.street && command.number && command.zip_code){
+					axios({ method: 'POST', url: `${base_url}/admin/usermod/${command.username}/${command.passw}?is_admin=${command.is_admin}&first_name=${command.first_name}&last_name=${command.last_name}&country=${command.country}&city=${command.city}&street=${command.street}&number=${command.number}&zip_code=${command.zip_code}`,
+					httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
                         .then(function (response) {
-                            // handle success
-                            console.log('Usermod success', response.data);
+                            console.log(response.data);
                         })
                         .catch(function (error) {
-                            // handle error
-                            console.log(error.response.status, error.response.statusText);
+							console.log(chalk.red.bold.underline('Usermod failed:'), error.response.status, chalk.magenta.bold(error.response.statusText));
                         })
                 }
 				else if(command.users && command.username){
                     axios.get(`${base_url}/admin/users/${command.username}`,
 					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })	
                         .then(function (response) {
-                            // handle success
-                            console.log(response.data);
+							if (response.data.error){
+								console.log(chalk.red.bold.underline('There is no user with username:'), chalk.magenta.bold(command.username));
+							}
+							else{
+								console.log(response.data);
+							}
                         })
                         .catch(function (error) {
-                            // handle error
-                            console.log(error.data);
+							console.log(chalk.red.bold.underline('Users failed:'), error.response.status, chalk.magenta.bold(chalk.magenta.bold(error.response.statusText)));
                         })
                 }
                 else if(command.sessionsupd && command.source){
-					axios.post(`${base_url}/admin/system/sessionsupd?source=${command.source}`,
-					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+					const formData = new FormData();
+					formData.append('file', fs.createReadStream(command.source));
+					axios({ method: 'POST', url: `${base_url}/admin/system/sessionsupd`, data: formData,
+					httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}`, ...formData.getHeaders()}})
 					.then(function (response) {
-						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
-						// handle error
-						console.log(error.data);
+						console.log(chalk.red.bold.underline('Sessionsupd failed:'), error.response.status, chalk.magenta.bold(chalk.magenta.bold(error.response.statusText)));
 					})
 				}
 				else if(command.healthcheck){
 					axios.get(`${base_url}/admin/healthcheck`,
 					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
-						// handle success
 						console.log(response.data);
 					})
 					.catch(function (error) {
-						// handle error
-						console.log(error.data);
+						console.log(chalk.red.bold.underline('Health check failed:'), error.response.status, chalk.magenta.bold(chalk.magenta.bold(error.response.statusText)));
 					})
 				}
 				else if(command.resetsessions){
-					axios.post(`${base_url}/admin/resetsessions`,
-					{ httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
+					axios({ method: 'POST', url: `${base_url}/admin/resetsessions`,
+					httpsAgent: agent, headers: { 'X-OBSERVATORY-AUTH': `${token}` } })
 					.then(function (response) {
-						// handle success
-						console.log('Post okay:', command.resetsessions)
 						console.log(response.data);
 					})
 					.catch(function (error) {
-						// handle error
-						console.log('Post NOT okay:', command.resetsessions)
-						console.log(error.response);
+						console.log(chalk.red.bold.underline('Reset sessions failed:'), error.response.status, chalk.magenta.bold(chalk.magenta.bold(error.response.statusText)));
 					})
 				}
 				else{
-					console.log('error: required options not specified');
+					console.log(chalk.red.bold.underline('Required options not specified'));
+					console.log(chalk.magenta.bold("Type 'ev_group70 Admin --help' to see the options"));
 				}
 			})
 		});

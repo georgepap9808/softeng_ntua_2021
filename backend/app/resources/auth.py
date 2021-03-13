@@ -83,7 +83,9 @@ class LoginResource(Resource):
         _login(user)
 
         return {'token': user.token,
-                'id': user.id}
+                'id': user.id,
+                'username': user.username,
+                }
 
 
 class GetUserDataResource(Resource):
