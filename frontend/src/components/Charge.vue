@@ -43,7 +43,10 @@
           <button v-on:click="addProvider('watt&volt')" class="btn btn-outline"> Watt & Volt </button>
         </div>
       </div>
-      <h2 class = "pick-provider">
+      <p class = "after-provider" v-if = "this.provider_name">
+        You selected {{ this.provider_name }} as your energy provider.
+      </p>
+      <h2 class = "pick-setting">
         Now set <b> one </b> of the following charging parameters:
       </h2>
       <!-- radiobuttons -->
@@ -67,14 +70,17 @@
           <input type = "text" v-model = "price" class = "price-input"> € <br>
         </div>
       </div>
-      <p v-if ="(this.setting == 'time')&(this.time!=0)" class = "expected-cost">
-        Expected estimated cost for this session: {{ ((this.time / 60) * 50 * this.kwh_cost) | round }} €
+      <p v-if ="(this.setting == 'time')&(this.time!=0)" class = "expected">
+        Expected cost for this session: {{ ((this.time / 60) * 50 * this.kwh_cost) | round }}€. <br>
+        Expected energy consumption: {{ (this.time / 60) * 50 | round }} kWh.
       </p>
-      <p v-if = "(this.setting == 'kwh')&(this.kwh!=0)" class = "expected-cost">
-        Expected estimated cost for this session: {{ (this.kwh * this.kwh_cost) | round}} €
+      <p v-if = "(this.setting == 'kwh')&(this.kwh!=0)" class = "expected">
+        Expected cost for this session: {{ (this.kwh * this.kwh_cost) | round }}€. <br>
+        Expected charging time: {{ ( this.kwh / 50) * 60 | round }} min.
       </p>
-      <p v-if = "(this.setting == 'price')&(this.price!=0)" class = "expected-cost">
-        Expected estimated cost for this session: {{ this.price | round }} €
+      <p v-if = "(this.setting == 'price')&(this.price!=0)" class = "expected">
+        Expected charging time for this session: {{ ((this.price / this.kwh_cost) / 50) * 60 | round }} min. <br>
+        Expected energy consumption: {{ (this.price / this.kwh_cost) | round }} kWh.
       </p>
       <div class = "charge-button">
         <button v-on:click="addSession()" class="btn btn-outline-dark btn-block btn-lg">
@@ -110,6 +116,7 @@ import Vue from 'vue'
       return {
         station_data: '',
         vehicle_data: '',
+        provider_name: '',
         station_id: '',     // needed
         reg_plate: '',      // needed
         plugged_in: '',
@@ -168,6 +175,7 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
+        this.provider_name = provider_name
         Vue.axios.get('http://127.0.0.1:5000/evcharge/api/allProviders',
          { headers: headers })
         .then(response => {
@@ -220,10 +228,11 @@ import Vue from 'vue'
         }
         else if (this.setting == "price") {
           this.kwh = this.price / this.kwh_cost
-          this.price = this.kwh * this.kwh_cost
+          this.time = (this.kwh / 50) * 60
         }
         else {
-          this.time = this.kwh / 50
+          this.time = (this.kwh / 50) * 60
+          this.price = this.kwh * this.kwh_cost
         }
         let date = new Date();
         let start =
@@ -314,12 +323,11 @@ import Vue from 'vue'
   .successful-plug-in {
     text-align: center;
     margin-top: 50px;
-    /*color: #16b800;*/
     font-weight: bold;
   }
   .pick-provider {
     text-align: center;
-    margin-top: 60px;
+    margin-top: 40px;
   }
   .column {
     float: left;
@@ -333,6 +341,14 @@ import Vue from 'vue'
   }
   .row {
     margin-left: 33.25%;
+  }
+  .after-provider {
+    font-size: 18px;
+    margin-top: 30px;
+  }
+  .pick-setting {
+    text-align: center;
+    margin-top: 30px;
   }
   #radiobuttons {
     margin-left: 600px;
@@ -351,7 +367,7 @@ import Vue from 'vue'
   .price-input {
     width: 10%;
   }
-  .expected-cost {
+  .expected {
     text-align: center;
     font-size: 18px;
     margin-top: 10px;
@@ -360,7 +376,7 @@ import Vue from 'vue'
     width: 30%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 35px;
+    margin-top: 30px;
   }
   .msg {
     color : orange;
@@ -411,8 +427,5 @@ import Vue from 'vue'
      margin-right: auto;
      background-size: 100%;
      background-repeat: no-repeat;
-  }
-  #press-me {
-    margin-left: 45%;
   }
 </style>

@@ -6,11 +6,8 @@
       <p> Full Name:
         {{ this.first_name }} {{ this.last_name}}
       </p>
-      <p> Email:
-        {{ this.email }}
-      </p>
       <p> Address:
-        {{ this.street }} {{ this.number }} {{ this.city }} {{ this.zip_code}}
+        {{ this.number }} {{ this.street }}, {{ this.city }}, {{ this.zip_code}}
       </p>
     </div>
     <div class = "image_account"> </div>
@@ -29,7 +26,6 @@ import Vue from 'vue';
     },
     data(){
       return {
-        email: '',
         first_name: '',
         last_name: '',
         country: '',
@@ -45,10 +41,9 @@ import Vue from 'vue';
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('https://localhost:8765/evcharge/api/users?username='
+        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/admin/users/'
         + this.$store.getters.username, { headers: headers})
           .then(response => {
-            this.email = response.data.email,
             this.first_name = response.data.first_name,
             this.last_name = response.data.last_name,
             this.country = response.data.country,
@@ -106,6 +101,6 @@ import Vue from 'vue';
   }
   .error_message {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 60px;
   }
 </style>
