@@ -6,8 +6,8 @@
 Υλοποιήθηκε από τους:
 ---------------------
 
-* [Μαρκάκης Νικόλαος](https://github.com/markakisn "Μαρκάκης Νικόλαος") `ΑΜ: 03l17XXX` `el17XXX@mail.ntua.gr`
-* [Μυροπούλου Νεφέλη](https://github.com/nefeli-my "Μυροπούλου Νεφέλη") `ΑΜ: 03l17XXX` `el17XXX@mail.ntua.gr`
+* [Μαρκάκης Νικόλαος](https://github.com/markakisn "Μαρκάκης Νικόλαος") `ΑΜ: 03l17123` `el17123@mail.ntua.gr`
+* [Μυροπούλου Νεφέλη](https://github.com/nefeli-my "Μυροπούλου Νεφέλη") `ΑΜ: 03l17197` `el17197@mail.ntua.gr`
 * [Παπαϊωάνου Γεώργιος](https://github.com/georgepap9808 "Παπαϊωάνου Γεώργιος") `ΑΜ: 03117836` `el17836@mail.ntua.gr`
 * [Στάβαρης Δημοσθένης](https://github.com/dimos-stavaris "Στάβαρης Δημοσθένης") `ΑΜ: 03117404` `el17404@mail.ntua.gr`
 
