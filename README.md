@@ -50,6 +50,7 @@ npm install
 ```
 npm run serve
 ```
+Για να δούμε το frontend επισκεπτόμαστε τη σελίδα https://localhost:8080/login
 
 Εγκατάσταση και εκτέλεση cli
 ---------------
