@@ -26,12 +26,6 @@ cd softeng_ntua_2021
 ```bash
 cd backend
 deploy.sh
-cd softeng_ntua_2021
-python3 -m venv venv
-venv/scripts/activate
-pip install -r requirements.txt
-cd backend
-flaskrun.sh
 ```
 
 ### Κάθε επόμενη εκτέλεση του backend
