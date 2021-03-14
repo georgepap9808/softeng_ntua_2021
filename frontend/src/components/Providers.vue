@@ -37,7 +37,7 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/allProviders', { headers: headers })
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/allProviders', { headers: headers })
         .then(response => {
           this.providers = response.data.providers
         })

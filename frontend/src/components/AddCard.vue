@@ -49,7 +49,7 @@ import NavigationBar from './NavigationBar.vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.post('http://127.0.0.1:5000/evcharge/api/card?user_id=' + this.$store.getters.user_id
+        Vue.axios.post('https://127.0.0.1:5000/evcharge/api/card?user_id=' + this.$store.getters.user_id
         + '&card_number=' + this.card_number + '&card_expiration=' + this.card_expiration
         + '&cvc_code=' + this.cvc_code, { headers: headers })
         .then(() =>

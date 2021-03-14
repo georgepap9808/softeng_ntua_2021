@@ -60,7 +60,7 @@ import Vue from 'vue';
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         // basic accound info
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/admin/users/'
+        Vue.axios.get('httpss://127.0.0.1:5000/evcharge/api/admin/users/'
         + this.$store.getters.username, { headers: headers})
           .then(response => {
             this.first_name = response.data.first_name,
@@ -73,7 +73,7 @@ import Vue from 'vue';
           })
            .catch(err => console.log(err))
         // total of stations where the user has made charges
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/admin/users/stationByUser?id='
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/admin/users/stationByUser?id='
         + this.$store.getters.user_id, { headers: headers })
           .then(response =>
             this.stations_total = response.data.stations.length
@@ -81,7 +81,7 @@ import Vue from 'vue';
           .catch(err => console.log(err))
         // all the rest
         let all_sessions = []
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/SessionsPerDate/2010-01-01/2021-12-31'
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/SessionsPerDate/2010-01-01/2021-12-31'
         + '?id=' + this.$store.getters.user_id, {headers: headers})
         .then(response => {
             all_sessions = response.data.sessions
