@@ -38,7 +38,6 @@ flaskrun.sh
 ```bash
 cd softeng_ntua_2021
 venv/scripts/activate
-source venv/scripts/activate
 cd backend
 flaskrun.sh
 ```
