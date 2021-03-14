@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a v-if = "!this.$store.getters.charging_enabled" class="navbar-brand">
+      <a  class="navbar-brand">
         EV Charging System </a>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
@@ -44,9 +44,11 @@
              <router-link class="dropdown-item" to="/Providers">Energy Providers</router-link>
            </div>
          </li>
+         <!--
          <li class="nav-item">
            <router-link class="nav-link" to="/Statistics"> Statistics </router-link>
          </li>
+         -->
          <ul class="nav justify-content-end">
            <li class="nav-item">
              <router-link class = "nav-link pr-3" to="/logout"> Logout </router-link>
