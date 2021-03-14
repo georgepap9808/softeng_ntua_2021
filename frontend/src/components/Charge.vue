@@ -137,7 +137,7 @@ import Vue from 'vue'
         'Content-Type': 'text/json',
         'X-OBSERVATORY-AUTH': this.$store.getters.token
       }
-      Vue.axios.get('http://127.0.0.1:5000/evcharge/api/allStations',
+      Vue.axios.get('https://127.0.0.1:5000/evcharge/api/allStations',
       { headers: headers })
       .then(response => {
           let stations = response.data.stations
@@ -157,7 +157,7 @@ import Vue from 'vue'
           'Content-Type': 'text/json',
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/vehicle?user_id='
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/vehicle?user_id='
         + this.$store.getters.user_id, { headers: headers })
         .then(response => {
             let vehicles = response.data.vehicles
@@ -176,7 +176,7 @@ import Vue from 'vue'
           'X-OBSERVATORY-AUTH': this.$store.getters.token
         }
         this.provider_name = provider_name
-        Vue.axios.get('http://127.0.0.1:5000/evcharge/api/allProviders',
+        Vue.axios.get('https://127.0.0.1:5000/evcharge/api/allProviders',
          { headers: headers })
         .then(response => {
             let providers = response.data.providers
@@ -271,7 +271,7 @@ import Vue from 'vue'
         }
         // february case not taken in consideration, neither 30-days months
         let finish = fin_year + '-' + fin_month + '-' + fin_date + " " + fin_h + ":" + fin_min
-        Vue.axios.post('http://127.0.0.1:5000/evcharge/api/AddSingleSession?user_id=' +
+        Vue.axios.post('https://127.0.0.1:5000/evcharge/api/AddSingleSession?user_id=' +
         this.$store.getters.user_id + '&station_id=' + this.station_id + '&registration_plate=' +
         this.reg_plate + '&starting_time='+  start + '&finishing_time=' + finish + '&kwh_cost=' +
         this.kwh_cost + '&kwh_delivered=' + this.kwh + '&provider_id=' + this.provider_id,

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from './store.js'
 
 Vue.use(VueRouter)
 
@@ -61,11 +60,6 @@ const routes = [
     component: () => import('./components/Charge.vue'),
   },
   {
-    path: '/Statistics',
-    name: 'Statistics',
-    component: () => import('./components/Stats.vue'),
-  },
-  {
     path: '/Providers',
     name: 'Providers',
     component: () => import('./components/Providers.vue'),
@@ -80,18 +74,6 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   routes
-})
-
-router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.LoggedIn) {
-      next()
-      return
-    }
-    //next('/login')
-  } else {
-    next()
-  }
 })
 
 export default router

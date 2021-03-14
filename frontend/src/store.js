@@ -34,7 +34,7 @@ export default new Vuex.Store({
     actions: {
         login ({commit},creds) {
             return new Promise((resolve,reject) =>{
-                Vue.axios.post('http://127.0.0.1:5000/evcharge/api/login?username=' + creds.name + '&password=' + creds.password)
+                Vue.axios.post('https://127.0.0.1:5000/evcharge/api/login?username=' + creds.name + '&password=' + creds.password)
                 .then(response => {
                     const token = response.data.token
                     const user_id = response.data.id
