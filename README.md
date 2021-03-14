@@ -40,13 +40,13 @@ flaskrun.sh
 
 Εγκατάσταση και εκτέλεση του Frontend
 --------------------
-### Πρώτη φορά εκτέλεσης frontend
+### Εγκατάσταση frontend
 ```
 cd frontend
 npm install
 ```
 
-### Serve για κάθε επόμενη φορά
+### Serve για εκτέλεση frontend
 ```
 npm run serve
 ```
