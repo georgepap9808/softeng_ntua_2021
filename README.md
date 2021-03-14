@@ -44,8 +44,15 @@ flaskrun.sh
 
 Εγκατάσταση και εκτέλεση του Frontend
 --------------------
+```
+cd frontend
+npm install
+```
 
-
+## Serve
+```
+npm run serve
+```
 
 Εγκατάσταση και εκτέλεση cli
 ---------------
