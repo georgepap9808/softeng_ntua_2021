@@ -24,3 +24,11 @@ pip install -r requirements.txt
 #### Κάθε επόμενη φορά
 `source venv/scripts/activate`
 
+Εγκατάσταση και εκτέλεση cli
+----------------------------
+```bash
+cd cli-client
+npm install -g
+npm link
+ev_group70
+```
