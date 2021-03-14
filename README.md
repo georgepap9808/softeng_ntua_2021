@@ -31,7 +31,7 @@ deploy.sh
 ### Κάθε επόμενη εκτέλεση του backend
 ```bash
 cd softeng_ntua_2021
-venv\cripts\ctivate
+venv\sripts\activate
 cd backend
 flaskrun.sh
 ```
