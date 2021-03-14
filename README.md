@@ -22,13 +22,15 @@ cd softeng_ntua_2021
 
 Εγκατάσταση και εκτέλεση του backend
 ------------------------------------
-## Flask backend
+## Εγκατάσταση του backend
 ```bash
-cd backend
-deploy.sh
+cd softeng_ntua_2021
+python3 -m venv venv
+venv\sripts\activate
+pip install -r requirements.txt
 ```
 
-### Κάθε επόμενη εκτέλεση του backend
+### Εκτέλεση του backend
 ```bash
 cd softeng_ntua_2021
 venv\sripts\activate
