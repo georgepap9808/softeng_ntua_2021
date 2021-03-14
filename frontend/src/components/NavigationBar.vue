@@ -43,7 +43,7 @@
              <router-link class="dropdown-item" to="/Stations">EV Charging Stations</router-link>
              <router-link class="dropdown-item" to="/Providers">Energy Providers</router-link>
            </div>
-          </li>
+         </li>
          <li class="nav-item">
            <router-link class="nav-link" to="/Statistics"> Statistics </router-link>
          </li>

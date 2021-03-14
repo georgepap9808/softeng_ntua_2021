@@ -19,7 +19,7 @@
      </div>
      <div class = "image"> </div>
      <div>
-       <p>
+       <p class = "disclaimer">
          All pictures are credited to their rightful owners. <br>
          A project for Software Engineering, NTUA 2021 </p>
      </div>
@@ -55,8 +55,8 @@ import NavigationBar from './NavigationBar.vue'
     text-align: left;
     font-size: 18px;
   }
-  p {
-    font-size: 14px;
+  .disclaimer {
+    font-size: 16px;
     text-align: center;
   }
   .main-div {
